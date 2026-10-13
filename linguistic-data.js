@@ -65,14 +65,6 @@ globalThis.MotionData = (() => {
           "nonpast3pl": "ду́т"
         }
       }
-    },
-    "distributedParticipants": "movers",
-    "distributiveBlocked": {
-      "uni": "No conventional standard distributive form on the -йти́ stem for при- / у-. Use the -ходи́ть form in the right column."
-    },
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "established"
     }
   },
   {
@@ -125,11 +117,6 @@ globalThis.MotionData = (() => {
         "pastN": "езжа́ло"
       },
       "explanation": "The directional imperfective uses -езжа́ть, not -е́здить."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "established",
-      "multi": "established"
     }
   },
   {
@@ -182,11 +169,6 @@ globalThis.MotionData = (() => {
         "pastN": "бега́ло"
       },
       "explanation": "The directional imperfective shifts stress to -бега́ть."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "established",
-      "multi": "established"
     }
   },
   {
@@ -223,11 +205,6 @@ globalThis.MotionData = (() => {
           "pastN": "лета́ло"
         }
       ]
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "established",
-      "multi": "established"
     }
   },
   {
@@ -280,11 +257,6 @@ globalThis.MotionData = (() => {
         "pastN": "плыва́ло"
       },
       "explanation": "The directional imperfective uses -плыва́ть, not -пла́вать."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "established"
     }
   },
   {
@@ -337,11 +309,6 @@ globalThis.MotionData = (() => {
         "pastN": "полза́ло"
       },
       "explanation": "The directional imperfective shifts stress to -полза́ть."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -407,11 +374,6 @@ globalThis.MotionData = (() => {
         "pastN": "леза́ло"
       },
       "explanation": "The directional imperfective uses -леза́ть; the two unprefixed variants converge here."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -464,11 +426,6 @@ globalThis.MotionData = (() => {
         "pastN": "бреда́ло"
       },
       "explanation": "The directional imperfective uses -бреда́ть, not -броди́ть."
-    },
-    "distributedParticipants": "movers",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -505,11 +462,6 @@ globalThis.MotionData = (() => {
           "pastN": "носи́ло"
         }
       ]
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -546,11 +498,6 @@ globalThis.MotionData = (() => {
           "pastN": "вози́ло"
         }
       ]
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -587,11 +534,6 @@ globalThis.MotionData = (() => {
           "pastN": "води́ло"
         }
       ]
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -644,11 +586,6 @@ globalThis.MotionData = (() => {
         "pastN": "та́скивало"
       },
       "explanation": "The directional imperfective uses -та́скивать, not -таска́ть."
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -701,11 +638,6 @@ globalThis.MotionData = (() => {
         "pastN": "ка́тывало"
       },
       "explanation": "The directional imperfective uses -ка́тывать, not -ката́ть."
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   },
   {
@@ -742,11 +674,6 @@ globalThis.MotionData = (() => {
           "pastN": "гоня́ло"
         }
       ]
-    },
-    "distributedParticipants": "objects",
-    "distributiveUsage": {
-      "uni": "productive",
-      "multi": "productive"
     }
   }
 ];

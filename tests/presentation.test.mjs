@@ -20,9 +20,9 @@ test('click, keyboard opening, info-icon separation and dialog focus restoration
   cell.fire('click',{target:{closest:()=>true}});assert(!e['conjugation-dialog'].open);
 });
 test('usage tooltip hover/tap/focus and dismiss behaviour',()=>{
-  const {elements:e,document,ui}=app({setTimeout(fn){fn();return 0;},clearTimeout(){}});ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
-  const cell=e['verb-rows'].children[8].children[2];const button=descendants(cell,'button').find(node=>node.text==='multiple objects');assert(button);assert(!cell.text.includes('Distribution may be'));
-  button.fire('pointerenter');assert(!e['usage-tooltip'].hidden);assert(e['usage-tooltip'].text.includes('Distribution may be'));
+  const {elements:e,document,ui}=app({setTimeout(fn){fn();return 0;},clearTimeout(){}});ui.dispatch({type:'prefix',value:'pri'});ui.dispatch({type:'tense',value:'future'});
+  const button=descendants(e['verb-rows'],'button').find(node=>node.className==='irregular-label');assert(button);
+  button.fire('pointerenter');assert(!e['usage-tooltip'].hidden);assert(e['usage-tooltip'].text.includes('directional imperfective'));
   button.fire('click',{stopPropagation(){}});button.fire('click',{stopPropagation(){}});assert(e['usage-tooltip'].hidden);
   button.fire('focus');document.fire('keydown',{key:'Escape'});assert(e['usage-tooltip'].hidden);
   button.fire('click',{stopPropagation(){}});document.fire('click',{target:new Element('outside')});assert(e['usage-tooltip'].hidden);
@@ -61,34 +61,15 @@ test('pronoun selector hides for infinitives and retains the selected subject',(
   assert(e['verb-rows'].text.includes('вы идёте'));
 });
 
-test('productive forms use an uncommon label with a delayed tooltip',()=>{
-  let callback;let delay;
-  const {elements:e,ui}=app({setTimeout(fn,ms){callback=fn;delay=ms;return 1;},clearTimeout(){}});
-  ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
-  const button=descendants(e['verb-rows'],'button').find(node=>node.text==='uncommon');
-  assert(button);assert.equal(button.className,'irregular-label');
-  button.fire('pointerenter');assert(e['usage-tooltip'].hidden);assert.equal(delay,100);
-  callback();assert(!e['usage-tooltip'].hidden);
-  assert(e['usage-tooltip'].text.startsWith('Productive / uncommon formation:'));
-  button.fire('click',{stopPropagation(){}});assert.equal(button.attrs['aria-expanded'],'true');
-});
 
-test('multiple objects has a separate tooltip only for singular subjects',()=>{
-  const {elements:e,ui}=app();
-  ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
-  const cell=()=>e['verb-rows'].children[8].children[2];
-  const labels=()=>descendants(cell(),'button');
-  const uncommon=labels().find(node=>node.text==='uncommon');
-  const objects=labels().find(node=>node.text==='multiple objects');
-  assert(uncommon);assert(objects);
-  uncommon.fire('click',{stopPropagation(){}});
-  assert(e['usage-tooltip'].text.startsWith('Productive / uncommon formation:'));
-  assert(!e['usage-tooltip'].text.includes('Distribution may be'));
-  objects.fire('click',{stopPropagation(){}});
-  assert.equal(e['usage-tooltip'].text,'Distribution may be over multiple moved objects or people, so a singular subject is valid.');
-  ui.dispatch({type:'pronoun',value:'my'});
-  assert(labels().some(node=>node.text==='uncommon'));
-  assert(!labels().some(node=>node.text==='multiple objects'));
-  ui.dispatch({type:'pronoun',value:'ya'});assert(labels().some(node=>node.text==='multiple objects'));
-  ui.dispatch({type:'tense',value:'infinitive'});assert(!labels().some(node=>node.text==='multiple objects'));
+test('po is an exclusive prefix choice and updates grid and popup',()=>{
+  const {elements:e,choose,ui}=app();
+  assert.equal(e['outer-po'],undefined);assert.equal(e['distributive-comparison'],undefined);
+  choose('prefix-pri');choose('prefix-po');choose('tense-future');
+  assert.equal(ui.getState().prefix,'po');assert(!e['prefix-pri'].checked);assert(e['prefix-po'].checked);
+  assert(e['verb-rows'].text.includes('пойду́'));assert(e['verb-rows'].text.includes('похожу́'));
+  e['verb-rows'].children[0].children[2].fire('click');assert(e['conjugation-context'].text.includes('по-'));
+  assert(e['conjugation-content'].text.includes('похожу́'));
+  choose('prefix-u');assert(!e['prefix-po'].checked);assert(e['verb-rows'].text.includes('уйду́'));
+  assert.throws(()=>ui.dispatch({type:'outerPo',value:true}));
 });

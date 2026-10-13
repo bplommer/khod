@@ -44,10 +44,8 @@ globalThis.MotionUI = (() => {
       setRadioValue(prefixRadios, state.prefix);
       singular.checked = state.number === 'singular';
       plural.checked = state.number === 'plural';
-      outerPoCheckbox.checked = state.outerPo;
     }
-    const outerPoCheckbox = document.getElementById('outer-po');
-    const prefixRadios = ['none', 'pri', 'u'].map(key => document.getElementById('prefix-' + key));
+    const prefixRadios = ['none', 'pri', 'u', 'po'].map(key => document.getElementById('prefix-' + key));
 
     // One floating tooltip serves every usage icon; its fixed position avoids
     // clipping inside the table. A tap pins it; hover/focus gives a transient view.
@@ -159,9 +157,9 @@ globalThis.MotionUI = (() => {
       return cell;
     }
 
-    function openConjugation(family, direction, prefix, outerPo, selectedTense, opener) {
+    function openConjugation(family, direction, prefix, selectedTense, opener) {
       hideUsageTooltip();
-      const model = Model.conjugation({ ...state, prefix, outerPo, tense: selectedTense }, family.id, direction);
+      const model = Model.conjugation({ ...state, prefix, tense: selectedTense }, family.id, direction);
       document.getElementById('conjugation-title').textContent = model.title;
       document.getElementById('conjugation-context').textContent = model.context;
       const fragment = document.createDocumentFragment();
@@ -253,16 +251,11 @@ globalThis.MotionUI = (() => {
         }
         word.append(document.createTextNode(form));
       }
-      const objectExplanation = 'Distribution may be over multiple moved objects or people, so a singular subject is valid.';
-      const hasObjectExplanation = variant.usageInfo?.includes(objectExplanation);
-      const usageInfo = hasObjectExplanation ? variant.usageInfo.replace(objectExplanation, '').trim() : variant.usageInfo;
-      const multipleObjects = hasObjectExplanation && !isPlural && tense !== 'infinitive';
-      const uncommon = usageInfo?.startsWith('Productive / uncommon formation:');
-      if (usageInfo && !uncommon) appendUsageIcon(word, usageInfo);
+      if (variant.usageInfo) appendUsageIcon(word, variant.usageInfo);
       cell.append(word);
       const irregularNote = irregularExplanation && variant.note?.includes(irregularExplanation) ? irregularExplanation : null;
       const regularNote = irregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
-      if (regularNote || irregularNote || reason || inappropriate || uncommon || multipleObjects) {
+      if (regularNote || irregularNote || reason || inappropriate) {
         const note = document.createElement('span');
         note.className = 'cell-note';
         note.lang = 'en';
@@ -270,14 +263,6 @@ globalThis.MotionUI = (() => {
         if (irregularNote) {
           if (note.textContent) note.append(document.createTextNode(' '));
           appendIrregularLabel(note, irregularNote);
-        }
-        if (uncommon) {
-          if (note.textContent || irregularNote) note.append(document.createTextNode(' '));
-          appendUsageIcon(note, usageInfo, 'uncommon');
-        }
-        if (multipleObjects) {
-          if (note.textContent || irregularNote || uncommon) note.append(document.createTextNode(' '));
-          appendUsageIcon(note, objectExplanation, 'multiple objects');
         }
         cell.append(note);
       }
@@ -287,7 +272,7 @@ globalThis.MotionUI = (() => {
       hideUsageTooltip();
       syncControls();
       const model = Model.grid(state);
-      const { tense, person, gender, prefix, outerPo } = state;
+      const { tense, person, gender, prefix } = state;
       const isPlural = state.number === 'plural';
       const settings = model.settings;
       pronounOptions.hidden = !model.visibility.pronoun;
@@ -295,7 +280,6 @@ globalThis.MotionUI = (() => {
       personOptions.hidden = !model.visibility.person;
       genderOptions.hidden = !model.visibility.gender;
       document.getElementById('prefix-info').textContent = settings.info;
-      document.getElementById('distributive-comparison').hidden = !outerPo || prefix === 'none';
       for (const direction of ['uni', 'multi']) {
         const column = model.columns[direction];
         document.getElementById(direction + '-title').textContent = column.title;
@@ -318,12 +302,12 @@ globalThis.MotionUI = (() => {
           cell.setAttribute('aria-label', 'Show conjugation: ' + family.movement + ', ' + settings.titles[direction === 'uni' ? 0 : 1]);
           cell.addEventListener('click', event => {
             if (event.target.closest?.('.info-button, .irregular-label')) return;
-            openConjugation(family, direction, prefix, outerPo, tense, cell);
+            openConjugation(family, direction, prefix, tense, cell);
           });
           cell.addEventListener('keydown', event => {
             if (event.target !== cell || !['Enter', ' '].includes(event.key)) return;
             event.preventDefault();
-            openConjugation(family, direction, prefix, outerPo, tense, cell);
+            openConjugation(family, direction, prefix, tense, cell);
           });
           for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation);
           row.append(cell);
@@ -338,7 +322,6 @@ globalThis.MotionUI = (() => {
       state = State.updateState(state, action);
       render();
     }
-    outerPoCheckbox.addEventListener('change', () => dispatch({ type: 'outerPo', value: outerPoCheckbox.checked }));
     for (const [type, radios] of [['prefix', prefixRadios], ['tense', tenseRadios], ['pronoun', pronounRadios], ['person', personRadios], ['gender', genderRadios]]) {
       for (const radio of radios) radio.addEventListener('change', () => dispatch({ type, value: radio.value }));
     }

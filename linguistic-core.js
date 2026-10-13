@@ -38,49 +38,12 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
       });
     }
 
-    // Outer distributive по- is an operation on an existing directional
-    // prefixed motion verb (perfective or imperfective), not a stored cross-product.
-    // Distribution can be over subjects or, with transitive verbs, objects.
-    function settingsFor(innerPrefix, outerPo) {
-      if (!outerPo) return prefixSettings[innerPrefix];
-      if (innerPrefix === 'none') return prefixSettings.po;
-      const inner = prefixSettings[innerPrefix];
-      const action = innerPrefix === 'pri' ? 'arrive' : 'leave';
-      return {
-        label: 'по- + ' + inner.label,
-        aspects: { uni: 'perfective', multi: 'perfective' },
-        titles: ['Distributive perfective', 'Distributive perfective'],
-        hints: ['From the inner perfective', 'From the inner imperfective'],
-        info: 'Outer по-: all/many movers ' + action + ', or multiple objects are brought / taken away, successively. Both columns are perfective. Some formations are productive but uncommon; singular transitive subjects are valid with multiple objects.'
-      };
+    function settingsFor(prefix) {
+      return prefixSettings[prefix];
     }
 
-    function selectedVariants(family, direction, innerPrefix, outerPo, tense, isPlural) {
-      if (!outerPo) return variantsFor(family, direction, innerPrefix);
-      if (innerPrefix === 'none') return variantsFor(family, direction, 'po');
-      const blocked = family.distributiveBlocked?.[direction];
-      if (blocked) return [{ status: 'ungrammatical', explanation: blocked }];
-      return variantsFor(family, direction, innerPrefix).map(variant => {
-        const forms = Object.fromEntries(Object.entries(variant)
-          .filter(([key]) => /^(infinitive|nonpast[123](sg|pl)|past(M|F|N|Pl))$/.test(key))
-          .map(([key, form]) => [key, attachPrefix('по', form)]));
-        const singularReading = tense !== 'infinitive' && !isPlural && family.distributedParticipants === 'movers';
-        const usageNote = family.distributiveUsage[direction] === 'productive'
-          ? 'Productive / uncommon formation: interpretable in a suitable distributive context; not presented as a frequent everyday word.'
-          : '';
-        const participantNote = family.distributedParticipants === 'objects'
-          ? 'Distribution may be over multiple moved objects or people, so a singular subject is valid.'
-          : '';
-        return {
-          ...variant,
-          ...forms,
-          aspect: 'perfective',
-          status: singularReading ? 'semantic' : 'valid',
-          note: variant.note,
-          usageInfo: [usageNote, participantNote].filter(Boolean).join(' '),
-          ...(singularReading ? { explanation: 'Distributive по- requires multiple movers. This form is inappropriate for a single-individual reading; a collective singular subject can work.' } : {})
-        };
-      });
+    function selectedVariants(family, direction, prefix) {
+      return variantsFor(family, direction, prefix);
     }
 
     const futureAuxiliaries = { '1sg': 'бу́ду', '2sg': 'бу́дешь', '3sg': 'бу́дет', '1pl': 'бу́дем', '2pl': 'бу́дете', '3pl': 'бу́дут' };

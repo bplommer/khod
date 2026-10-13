@@ -14,7 +14,7 @@ globalThis.MotionState = (() => {
     oni: { text: 'они́', person: '3', number: 'plural' }
   };
   const values = {
-    prefix: ['none', 'pri', 'u'],
+    prefix: ['none', 'pri', 'u', 'po'],
     tense: ['infinitive', 'past', 'present', 'future'],
     person: ['1', '2', '3'],
     number: ['singular', 'plural'],
@@ -22,7 +22,7 @@ globalThis.MotionState = (() => {
     pronoun: Object.keys(pronounSpecs)
   };
   function initialState() {
-    return { prefix: 'none', outerPo: false, tense: 'infinitive', person: '1', number: 'singular', gender: 'masculine', pronoun: 'ya' };
+    return { prefix: 'none', tense: 'infinitive', person: '1', number: 'singular', gender: 'masculine', pronoun: 'ya' };
   }
   function reconcileAgreement(state) {
     if (state.tense === 'infinitive') return state;
@@ -49,9 +49,7 @@ globalThis.MotionState = (() => {
     return reconcileAgreement(state);
   }
   function updateState(previous, action) {
-    if (action.type === 'outerPo') {
-      if (typeof action.value !== 'boolean') throw new TypeError('outerPo must be boolean');
-    } else if (!values[action.type]?.includes(action.value)) {
+    if (!values[action.type]?.includes(action.value)) {
       throw new TypeError('Invalid state action: ' + action.type + ' = ' + action.value);
     }
     const next = { ...previous, [action.type]: action.value };

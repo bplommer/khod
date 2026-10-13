@@ -56,7 +56,7 @@ Each layer has one explicit namespace (`MotionData`, `MotionCore`, `MotionState`
 
 ## State and actions
 
-State stores `prefix`, `outerPo`, `tense`, `pronoun`, `number`, `person`, and `gender`. Controls project this state instead of storing it. Public updates return a new object without mutating their input:
+State stores `prefix`, `tense`, `pronoun`, `number`, `person`, and `gender`. Controls project this state instead of storing it. Public updates return a new object without mutating their input:
 
 ```js
 const before = MotionState.initialState();
@@ -66,7 +66,7 @@ const after = MotionState.updateState(before, {
 });
 ```
 
-Action types match the state fields. Person uses `'1'`, `'2'`, `'3'`; other permitted values are in `MotionState.values`. `outerPo` takes a boolean.
+Action types match the state fields. Person uses `'1'`, `'2'`, `'3'`; other permitted values are in `MotionState.values`. Prefix choices are `none`, `pri`, `u`, and `po`; they are mutually exclusive.
 
 Pronoun selection changes only agreement features needed by the tense. Past has no person inflection, so selecting я or ты preserves latent person until present/future requires it. Masculine/feminine past can retain я/ты; neuter uses оно. Infinitive retains latent agreement features. Gender controls appear only for singular past; third-person gender is also remembered for subject transitions.
 
@@ -74,26 +74,25 @@ Pronoun selection changes only agreement features needed by the tense. Past has 
 
 ## Extending the linguistic model
 
-Each movement label and base paradigm is stored once. Prefixing uses them except where a family provides a changed bound stem or an explicit exception. Distributive по- composes with the inner form rather than storing copied paradigms.
+Each movement label and base paradigm is stored once. Prefixing uses them except where a family provides a changed bound stem or an explicit exception. The single по- prefix gives onset and limited-duration meanings; distributive combinations with other prefixes are not included.
 
 - Surface forms and stress belong to paradigms or bound-stem exceptions.
 - Prefix meaning and aspect behaviour belong to prefix descriptions.
-- Distribution over movers versus moved objects belongs to the motion family.
 - Grammatical gaps, semantic mismatch and usage frequency remain separate concepts.
 
-The current stress rule applies to при-, у-, and по-. A prefix such as вы- needs a different stress policy. Productive/uncommon forms are compositional predictions, not a claim that every derived word is equally established. This refactor preserves the previous linguistic model rather than conducting a new linguistic audit.
+The current stress rule applies to при-, у-, and по-. A prefix such as вы- needs a different stress policy. 
 
 ## Tests and limits
 
-`node --test` runs 25 named tests, including:
+`node --test` runs the tests, including:
 
-- Curated irregular/stress examples, tense/aspect rules, stem changes and distribution.
+- Curated irregular/stress examples, tense/aspect rules, stem changes and both single-prefix по- meanings.
 - Exhaustive paradigm-completeness checks.
 - Immutable state transitions, minimal agreement changes and hidden-state retention.
-- All 432 grid combinations and all 672 popup targets/tense combinations.
+- All 288 grid combinations and all 448 popup targets/tense combinations.
 - DOM-adapter event handlers, dialog/tooltip behaviour and sticky-height thresholds.
 - Exact source embedding, packaged/source model parity and packaging guards.
-- A compact SHA-256 regression baseline covering pre-refactor derived variants.
+- A compact SHA-256 regression baseline covering the retained single-prefix variants.
 
 The regression baseline proves compatibility, not linguistic correctness. Curated examples provide separate expected results. Update the baseline deliberately after checking an intentional model change, not merely to make a failing test pass.
 

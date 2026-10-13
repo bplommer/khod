@@ -48,7 +48,7 @@ test('all pronouns and tenses have consistent agreement and visibility', () => {
 });
 test('prefix changes never change subject/agreement/tense', () => {
   const state = act(act(State.initialState(), 'tense', 'past'), 'pronoun', 'vy');
-  for (const [type, value] of [['prefix', 'pri'], ['outerPo', true]]) {
+  for (const [type, value] of [['prefix', 'pri'], ['prefix', 'po']]) {
     const next = act(state, type, value);
     for (const key of ['pronoun', 'person', 'number', 'gender', 'tense']) assert.equal(next[key], state[key]);
   }

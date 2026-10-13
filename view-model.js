@@ -13,7 +13,7 @@ globalThis.MotionViewModel = (() => {
     return { form, unavailable: form === null, inappropriate, reason };
   }
   function grid(state) {
-    const settings = settingsFor(state.prefix, state.outerPo);
+    const settings = settingsFor(state.prefix);
     const columns = Object.fromEntries(['uni', 'multi'].map((direction, index) => {
       const aspect = settings.aspects[direction];
       return [direction, {
@@ -22,7 +22,7 @@ globalThis.MotionViewModel = (() => {
       }];
     }));
     const rows = motionFamilies.map(family => ({ family, cells: Object.fromEntries(['uni', 'multi'].map(direction =>
-      [direction, selectedVariants(family, direction, state.prefix, state.outerPo, state.tense, state.number === 'plural')])) }));
+      [direction, selectedVariants(family, direction, state.prefix)])) }));
     const subject = MotionState.subject(state);
     const mode = state.tense[0].toUpperCase() + state.tense.slice(1) + (subject ? ' · ' + subject : '') + ' · ' + settings.label;
     return { settings, columns, rows, mode, visibility: MotionState.visibility(state) };
@@ -31,11 +31,11 @@ globalThis.MotionViewModel = (() => {
     const family = motionFamilies.find(family => family.id === familyId);
     if (!family || !['uni', 'multi'].includes(direction)) throw new TypeError('Unknown conjugation target');
     const tense = state.tense === 'infinitive' ? 'present' : state.tense;
-    const settings = settingsFor(state.prefix, state.outerPo);
-    const variants = selectedVariants(family, direction, state.prefix, state.outerPo, tense, true);
+    const settings = settingsFor(state.prefix);
+    const variants = selectedVariants(family, direction, state.prefix);
     const sections = variants.map((variant, variantIndex) => {
       function cell(isPlural, person, gender) {
-        const selected = selectedVariants(family, direction, state.prefix, state.outerPo, tense, isPlural)[variantIndex];
+        const selected = selectedVariants(family, direction, state.prefix)[variantIndex];
         const description = describeForm(selected, tense, isPlural, person, gender);
         const subject = tense === 'past'
           ? (isPlural ? 'они́' : { masculine: 'он', feminine: 'она́', neuter: 'оно́' }[gender])
@@ -45,7 +45,7 @@ globalThis.MotionViewModel = (() => {
       const rows = tense === 'past'
         ? [['Masculine', false, 'masculine'], ['Feminine', false, 'feminine'], ['Neuter', false, 'neuter'], ['Plural', true, 'masculine']].map(([label, plural, gender]) => ({ label, cells: [cell(plural, '3', gender)] }))
         : ['1', '2', '3'].map((person, index) => ({ label: ['1st person', '2nd person', '3rd person'][index], cells: [cell(false, person, 'masculine'), cell(true, person, 'masculine')] }));
-      const singularVariant = selectedVariants(family, direction, state.prefix, state.outerPo, tense, false)[variantIndex];
+      const singularVariant = selectedVariants(family, direction, state.prefix)[variantIndex];
       const reason = describeForm(singularVariant, tense, false, '3', 'masculine').reason;
       const irregularNote = family.directionalImperfective?.explanation;
       const hasIrregularNote = irregularNote && variant.note?.includes(irregularNote);

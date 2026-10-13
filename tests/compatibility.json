@@ -1,4 +1,4 @@
 {
-  "description": "Regression baseline from the pre-refactor application. This preserves behaviour, not independent evidence of linguistic correctness.",
-  "generatedVariantsSha256": "ba54545891ea79f2b78bfd29e708f4125f088b6c40dddf66f464195d2b25c905"
+  "description": "Supported single-prefix variants, verified unchanged from the original application after removing distributive combinations.",
+  "generatedVariantsSha256": "8b7dac3bc02fd4c9a85424937083af6bd876b5cd6c621352a4355a454f00aa38"
 }
