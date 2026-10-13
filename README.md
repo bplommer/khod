@@ -1,4 +1,4 @@
-# Khod
+# Ход
 
 A dependency-free browser application for exploring Russian verbs of motion. Development sources are separate readable files; an optional standalone HTML file can be generated locally. Both versions execute the same JavaScript.
 
