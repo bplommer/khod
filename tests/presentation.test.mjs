@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { loadPure, sourceRoot, plain } from './load-app.mjs';
 import { fixture, Element, descendants } from './dom-fixture.mjs';
-function app(){const context=loadPure();const dom=fixture(readFileSync(sourceRoot+'index.html','utf8'));Object.assign(context,{setTimeout:()=>0,clearTimeout(){}});vm.runInContext(readFileSync(sourceRoot+'presentation.js','utf8'),context);const ui=context.MotionUI.start(dom.document,dom.window);return{...dom,ui};}
+function app(timers={setTimeout:()=>0,clearTimeout(){}}){const context=loadPure();const dom=fixture(readFileSync(sourceRoot+'index.html','utf8'));Object.assign(context,timers);vm.runInContext(readFileSync(sourceRoot+'presentation.js','utf8'),context);const ui=context.MotionUI.start(dom.document,dom.window);return{...dom,ui};}
 
 test('source adapter renders and syncs actual control event handlers',()=>{
   const {elements:e,choose,ui}=app();choose('tense-past');choose('gender-feminine');choose('pronoun-ty');
@@ -31,4 +31,20 @@ test('sticky controls use the half-height boundary and visual viewport',()=>{
   const {elements:e,window}=app();e['control-panel'].rect={height:400};window.fire('resize');assert(e['control-panel'].classes.has('is-sticky'));
   e['control-panel'].rect.height=401;window.fire('resize');assert(!e['control-panel'].classes.has('is-sticky'));
   window.visualViewport={height:600};e['control-panel'].rect.height=300;window.fire('resize');assert(e['control-panel'].classes.has('is-sticky'));
+});
+
+test('irregular explanation waits 100ms and cancels on leave, Escape and rerender',()=>{
+  let next=0;const pending=new Map();
+  const timers={setTimeout(fn,delay){const id=++next;pending.set(id,{fn,delay});return id;},clearTimeout(id){pending.delete(id);}};
+  const {elements:e,ui,document}=app(timers);
+  ui.dispatch({type:'prefix',value:'pri'});
+  const button=descendants(e['verb-rows'],'button').find(node=>node.className==='irregular-label');
+  assert(button);assert.equal(button.text,'irregular');assert.equal(button.attrs.title,undefined);
+  button.fire('pointerenter');assert(e['usage-tooltip'].hidden);
+  const task=[...pending.values()].find(task=>task.delay===100);assert(task);task.fn();
+  assert(!e['usage-tooltip'].hidden);assert(e['usage-tooltip'].text.includes('directional imperfective'));
+  document.fire('keydown',{key:'Escape'});assert(e['usage-tooltip'].hidden);
+  button.fire('pointerenter');button.fire('pointerleave');assert(![...pending.values()].some(task=>task.delay===100));
+  button.fire('focus');document.fire('keydown',{key:'Escape'});assert(![...pending.values()].some(task=>task.delay===100));
+  button.fire('pointerenter');ui.dispatch({type:'prefix',value:'none'});assert(![...pending.values()].some(task=>task.delay===100));
 });
