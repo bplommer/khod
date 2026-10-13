@@ -25,7 +25,20 @@ globalThis.MotionViewModel = (() => {
       [direction, selectedVariants(family, direction, state.prefix)])) }));
     const subject = MotionState.subject(state);
     const mode = state.tense[0].toUpperCase() + state.tense.slice(1) + (subject ? ' · ' + subject : '') + ' · ' + settings.label;
-    return { settings, columns, rows, mode, visibility: MotionState.visibility(state) };
+    const descriptions = rows.flatMap(row => ['uni', 'multi'].flatMap(direction => row.cells[direction].map(variant =>
+      describeForm(variant, state.tense, state.number === 'plural', state.person, state.gender))));
+    const emptyExplanation = descriptions.every(cell => cell.unavailable)
+      ? [...new Set(descriptions.map(cell => cell.reason).filter(Boolean))].join(' ') || 'No forms are available for this selection.'
+      : null;
+    const perfectivePresent = state.tense === 'present' && Object.values(settings.aspects).every(aspect => aspect === 'perfective');
+    const emptyPanel = emptyExplanation ? {
+      tense: state.tense[0].toUpperCase() + state.tense.slice(1) + ' tense',
+      meta: perfectivePresent ? 'Both forms are perfective' : '',
+      title: perfectivePresent ? 'No present-tense forms' : 'No available forms',
+      explanation: perfectivePresent ? 'Perfective verbs have no present tense. Both по- forms describe a completed or bounded action.' : emptyExplanation,
+      next: perfectivePresent ? 'Select Future to see their simple future forms.' : ''
+    } : null;
+    return { settings, columns, rows, mode, emptyExplanation, emptyPanel, visibility: MotionState.visibility(state) };
   }
   function conjugation(state, familyId, direction) {
     const family = motionFamilies.find(family => family.id === familyId);

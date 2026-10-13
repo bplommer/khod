@@ -66,7 +66,15 @@
     <span id="mode" role="status" aria-live="polite">Infinitive</span>
     </div>
     <p id="prefix-info" class="prefix-info"></p>
-    <div class="table-wrap">
+    <section id="empty-panel" class="empty-panel" role="status" hidden>
+      <div class="empty-panel-header"><span id="empty-tense"></span><span id="empty-meta" class="empty-meta"></span></div>
+      <div class="empty-panel-content">
+        <h2 id="empty-title"></h2>
+        <p id="empty-explanation"></p>
+        <p id="empty-next" class="empty-next"></p>
+      </div>
+    </section>
+    <div id="verb-table-wrap" class="table-wrap">
       <table id="verbs">
         <thead><tr>
           <th scope="col">Movement</th>
