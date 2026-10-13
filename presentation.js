@@ -51,9 +51,11 @@ globalThis.MotionUI = (() => {
     // One floating tooltip serves every usage icon; its fixed position avoids
     // clipping inside the table. A tap pins it; hover/focus gives a transient view.
     const usageTooltip = document.getElementById('usage-tooltip');
+    const usageTooltipHost = usageTooltip.parentNode;
     let activeInfoButton = null;
     let tooltipPinned = false;
     let tooltipHideTimer;
+    let tooltipShowTimer;
 
     function positionUsageTooltip() {
       if (!activeInfoButton) return;
@@ -69,6 +71,7 @@ globalThis.MotionUI = (() => {
     }
 
     function hideUsageTooltip() {
+      clearTimeout(tooltipShowTimer);
       clearTimeout(tooltipHideTimer);
       if (activeInfoButton) {
         activeInfoButton.setAttribute('aria-expanded', 'false');
@@ -92,27 +95,34 @@ globalThis.MotionUI = (() => {
     }
 
     function scheduleTooltipHide() {
+      clearTimeout(tooltipShowTimer);
       clearTimeout(tooltipHideTimer);
       tooltipHideTimer = setTimeout(() => {
         if (!tooltipPinned && document.activeElement !== activeInfoButton) hideUsageTooltip();
       }, 150);
     }
 
-    function appendUsageIcon(cell, text) {
+    function appendUsageIcon(cell, text, irregular = false) {
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = 'info-button';
-      button.textContent = 'i';
-      button.setAttribute('aria-label', 'Usage information');
+      button.className = irregular ? 'irregular-label' : 'info-button';
+      button.textContent = irregular ? 'irregular' : 'i';
+      button.lang = 'en';
+      button.setAttribute('aria-label', irregular ? 'Irregular form information' : 'Usage information');
       button.setAttribute('aria-expanded', 'false');
-      button.addEventListener('pointerenter', () => {
-        if (activeInfoButton !== button || !tooltipPinned) showUsageTooltip(button, text);
-      });
+      function revealTooltip() {
+        clearTimeout(tooltipShowTimer);
+        if (activeInfoButton === button && tooltipPinned) return;
+        if (irregular) tooltipShowTimer = setTimeout(() => showUsageTooltip(button, text), 100);
+        else showUsageTooltip(button, text);
+      }
+      button.addEventListener('pointerenter', revealTooltip);
       button.addEventListener('pointerleave', scheduleTooltipHide);
-      button.addEventListener('focus', () => showUsageTooltip(button, text));
+      button.addEventListener('focus', revealTooltip);
       button.addEventListener('blur', scheduleTooltipHide);
       button.addEventListener('click', event => {
         event.stopPropagation();
+        clearTimeout(tooltipShowTimer);
         if (activeInfoButton === button && tooltipPinned) hideUsageTooltip();
         else showUsageTooltip(button, text, true);
       });
@@ -195,9 +205,16 @@ globalThis.MotionUI = (() => {
           note.textContent = text;
           section.append(note);
         }
+        if (sectionModel.irregularNote) {
+          const note = document.createElement('p');
+          note.className = 'popup-note';
+          appendIrregularLabel(note, sectionModel.irregularNote);
+          section.append(note);
+        }
         fragment.append(section);
       }
       conjugationContent.replaceChildren(fragment);
+      conjugationDialog.append(usageTooltip);
       conjugationOpener = opener;
       conjugationDialog.showModal();
     }
@@ -209,10 +226,15 @@ globalThis.MotionUI = (() => {
     });
     conjugationDialog.addEventListener('close', () => {
       hideUsageTooltip();
+      usageTooltipHost?.append(usageTooltip);
       conjugationOpener?.focus();
     });
 
-    function renderVariant(cell, variant, tense, isPlural, person, gender) {
+    function appendIrregularLabel(parent, explanation) {
+      appendUsageIcon(parent, explanation, true);
+    }
+
+    function renderVariant(cell, variant, tense, isPlural, person, gender, irregularExplanation) {
       const { form, unavailable, inappropriate, reason } = Model.describeForm(variant, tense, isPlural, person, gender);
       const word = document.createElement(inappropriate && !unavailable ? 's' : 'span');
       word.className = 'verb-form';
@@ -232,11 +254,17 @@ globalThis.MotionUI = (() => {
       }
       if (variant.usageInfo) appendUsageIcon(word, variant.usageInfo);
       cell.append(word);
-      if (variant.note || reason || inappropriate) {
+      const irregularNote = irregularExplanation && variant.note?.includes(irregularExplanation) ? irregularExplanation : null;
+      const regularNote = irregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
+      if (regularNote || irregularNote || reason || inappropriate) {
         const note = document.createElement('span');
         note.className = 'cell-note';
         note.lang = 'en';
-        note.textContent = [inappropriate && !unavailable ? (variant.status === 'semantic' ? 'Semantic mismatch.' : 'Unidiomatic here.') : '', reason, variant.note].filter(Boolean).join(' ');
+        note.textContent = [inappropriate && !unavailable ? (variant.status === 'semantic' ? 'Semantic mismatch.' : 'Unidiomatic here.') : '', reason, regularNote].filter(Boolean).join(' ');
+        if (irregularNote) {
+          if (note.textContent) note.append(document.createTextNode(' '));
+          appendIrregularLabel(note, irregularNote);
+        }
         cell.append(note);
       }
     }
@@ -274,7 +302,7 @@ globalThis.MotionUI = (() => {
           cell.setAttribute('aria-haspopup', 'dialog');
           cell.setAttribute('aria-label', 'Show conjugation: ' + family.movement + ', ' + settings.titles[direction === 'uni' ? 0 : 1]);
           cell.addEventListener('click', event => {
-            if (event.target.closest?.('.info-button')) return;
+            if (event.target.closest?.('.info-button, .irregular-label')) return;
             openConjugation(family, direction, prefix, outerPo, tense, cell);
           });
           cell.addEventListener('keydown', event => {
@@ -282,7 +310,7 @@ globalThis.MotionUI = (() => {
             event.preventDefault();
             openConjugation(family, direction, prefix, outerPo, tense, cell);
           });
-          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender);
+          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation);
           row.append(cell);
         }
         fragment.append(row);

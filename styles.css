@@ -24,8 +24,9 @@ input:focus-visible { outline: 3px solid #69a991; outline-offset: 4px; }
 .distributive-comparison p { margin: 6px 0; }
 .form-meta { display: block; font: .7rem/1.4 system-ui, sans-serif; color: var(--green); margin: 4px 0 8px; }
 .cell-note { display: block; font: .75rem/1.45 system-ui, sans-serif; color: var(--muted); margin: 6px 0; }
+.irregular-label { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
 .info-button { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-left: 8px; padding: 0; vertical-align: middle; border: 1px solid #a4b8ac; border-radius: 50%; background: #edf2ec; color: var(--green); font: 600 14px/1 Arial, sans-serif; cursor: pointer; }
-.info-button:focus-visible { outline: 3px solid #69a991; outline-offset: 3px; }
+.info-button:focus-visible, .irregular-label:focus-visible { outline: 3px solid #69a991; outline-offset: 3px; }
 .usage-tooltip { position: fixed; z-index: 100; width: min(320px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 12px 14px; border: 1px solid #b8c8bd; border-radius: 10px; background: #fff; color: var(--ink); box-shadow: 0 6px 24px #23332f26; font: .85rem/1.5 Arial, sans-serif; }
 .usage-tooltip[hidden] { display: none; }
 .unavailable { display: block; min-height: 1.5em; }
