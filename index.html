@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Russian verbs of motion</title>
+  <link rel="stylesheet" href="styles.css" data-inline>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Russian · Motion verbs</div>
+      <h1>Two ways to move</h1>
+      <p class="intro">Explore base verbs and their standard prefixed forms, with stress and aspect shown.</p>
+    </header>
+    <div id="control-panel" class="control-panel">
+    <div class="prefix-options">
+      <label><input type="checkbox" id="outer-po" aria-controls="verbs prefix-info distributive-comparison"><span lang="ru">по-</span></label>
+      <fieldset class="prefix-options" id="prefix-options">
+      <legend>Directional prefix</legend>
+      <label><input type="radio" name="prefix" id="prefix-none" value="none" checked>No prefix</label>
+      <label><input type="radio" name="prefix" id="prefix-pri" value="pri"><span lang="ru">при-</span></label>
+      <label><input type="radio" name="prefix" id="prefix-u" value="u"><span lang="ru">у-</span></label>
+      </fieldset>
+    </div>
+    <fieldset id="pronoun-options" class="number-options" style="margin-bottom: 18px;">
+      <legend>Example subject</legend>
+      <label><input type="radio" name="pronoun" id="pronoun-ya" value="ya" checked><span lang="ru">я</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-my" value="my"><span lang="ru">мы</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-ty" value="ty"><span lang="ru">ты</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-vy" value="vy"><span lang="ru">вы</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-on" value="on"><span lang="ru">он</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-ona" value="ona"><span lang="ru">она́</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-ono" value="ono"><span lang="ru">оно́</span></label>
+      <label><input type="radio" name="pronoun" id="pronoun-oni" value="oni"><span lang="ru">они́</span></label>
+    </fieldset>
+    <div class="controls">
+      <fieldset id="tense-options" class="number-options">
+        <legend>Form / tense</legend>
+        <label><input type="radio" name="tense" id="tense-infinitive" value="infinitive" checked>Infinitive</label>
+        <label><input type="radio" name="tense" id="tense-past" value="past">Past</label>
+        <label><input type="radio" name="tense" id="tense-present" value="present">Present</label>
+        <label><input type="radio" name="tense" id="tense-future" value="future">Future</label>
+      </fieldset>
+      <fieldset id="number-options" class="number-options" hidden>
+        <legend>Number</legend>
+        <label><input type="radio" name="number" id="singular" value="singular" checked>Singular</label>
+        <label><input type="radio" name="number" id="plural" value="plural">Plural</label>
+      </fieldset>
+      <fieldset id="person-options" class="number-options" hidden>
+        <legend>Person</legend>
+        <label><input type="radio" name="person" id="person-1" value="1" checked>1st</label>
+        <label><input type="radio" name="person" id="person-2" value="2">2nd</label>
+        <label><input type="radio" name="person" id="person-3" value="3">3rd</label>
+      </fieldset>
+      <fieldset id="gender-options" class="number-options" hidden>
+        <legend>Gender</legend>
+        <label><input type="radio" name="gender" id="gender-masculine" value="masculine" checked>Masculine · <span lang="ru">он</span></label>
+        <label><input type="radio" name="gender" id="gender-feminine" value="feminine">Feminine · <span lang="ru">она́</span></label>
+        <label><input type="radio" name="gender" id="gender-neuter" value="neuter">Neuter · <span lang="ru">оно́</span></label>
+      </fieldset>
+      <span id="mode" role="status" aria-live="polite">Infinitive</span>
+    </div>
+    </div>
+    <p id="prefix-info" class="prefix-info"></p>
+    <section id="distributive-comparison" class="distributive-comparison" aria-label="Comparing distributive stems" hidden>
+      <p><strong>How much does the inner aspect change the meaning?</strong> Often very little: both resulting verbs are perfective, and both can describe the same completed set of arrivals, departures, or transfers.</p>
+      <p><strong>From an inner perfective:</strong> a useful compositional reading is “a number of individual completed arrivals / departures / transfers”. <strong>From an inner imperfective:</strong> “arriving / leaving / transferring distributed over a number of participants”. Outer по- still bounds the whole set, so this is not an ongoing or habitual imperfective.</p>
+      <p>For example, <span lang="ru">они́ поуе́хали</span> and <span lang="ru">они́ поуезжа́ли</span> can both mean “they all went away”. The latter can suggest people leaving successively or dispersing over time, but this is a contextual tendency, not a fixed contrast: the former can describe successive departures too.</p>
+      <p>Do not read the columns as “all completed” versus “some still incomplete”, or “once” versus “habitually”. The larger difference for many families is which formation sounds familiar or natural; a productive form may be much less established than its neighbour.</p>
+    </section>
+    <div class="table-wrap">
+      <table id="verbs">
+        <thead><tr>
+          <th scope="col">Movement</th>
+          <th scope="col"><span id="uni-title">Unidirectional</span><span id="uni-hint" class="hint">A particular journey in one direction</span><span id="uni-meta" class="form-meta"></span></th>
+          <th scope="col"><span id="multi-title">Multidirectional</span><span id="multi-hint" class="hint">Habitual, general, or varied movement</span><span id="multi-meta" class="form-meta"></span></th>
+        </tr></thead>
+        <tbody id="verb-rows"></tbody>
+      </table>
+    </div>
+    <p class="notes">The row labels describe the base movement. Prefixes can change its meaning. The unprefixed columns distinguish directionality; при- and у- give aspect pairs, while по- gives two different perfective meanings.</p>
+    <p class="notes">A dash (—) means the selected form is unavailable, with the reason below. Strikethrough = unidiomatic or semantically inappropriate for the stated reading, with an explanation. “Not modelled” means this tool does not cover the combination; it does not mean Russian forbids it. Colloquial register alone is not a reason for strikethrough.</p>
+    <details>
+      <summary>How to read this grid &amp; references</summary>
+      <p>Both <span lang="ru">ла́зить</span> and <span lang="ru">ла́зать</span> are multidirectional climbing verbs. Their first-person singular forms are <span lang="ru">ла́жу</span> and <span lang="ru">ла́заю</span>, respectively; both are shown in the same cell.</p>
+      <p>The always-visible pronoun selector chooses the example subject. Past agrees in number and gender, not person, so it can use я or ты too. Present and future allow all three persons; their gender comes from the pronoun and does not change the verb ending, so the gender controls appear only for singular past forms. Number is shared across tenses; gender is shared across past singular and third-person singular. Choosing я or ты preserves a stored masculine/feminine choice, which can be changed independently for their past forms. Neuter singular uses оно́. Hidden selections are retained. A perfective verb has no present tense, so its present cell shows a dash. Future is simple for perfective verbs and буду / бу́дем + infinitive for imperfective verbs. With по-, the right column means doing the activity for a while; it is not the imperfective partner of the left column.</p>
+      <p>The по- checkbox without a directional prefix retains the two single-prefix meanings. With при- or у-, outer по- is distributive: all or many movers arrive or leave successively. The operation can use either inner aspect stem; the result is perfective in both columns. Intransitive verbs distribute over movers; transitive verbs can distribute over moved objects or people.</p>
+      <p>Singular intransitive distributive forms are struck through for a single-individual reading. They are not morphologically ungrammatical: a collective singular subject can supply multiple participants. Transitive forms remain valid with a singular subject when multiple objects supply the distribution. “Productive / uncommon” distinguishes compositional formations from familiar lexical examples; it is not an error label.</p>
+      <p>The prefixed columns follow the corresponding base families, including conventional stem changes. A cell is judged in its movement sense; other dictionary meanings do not make it ungrammatical.</p>
+      <p>For an explicit example of the two derivations overlapping in meaning, see <a href="https://user.phil.hhu.de/~zinova/Thesis.pdf">Zinova, Russian Verbal Prefixation, pp. 140–142 (PDF pp. 154–156)</a>: both perfective-derived and imperfective-derived forms are used for the same group running out. The conceptual paraphrases above are a reading aid, not a claim that every pair has a stable semantic opposition.</p>
+      <p>Distributive reference: <a href="https://ruslang.ru/doc/uluxanov_2.pdf">Uluxanov: Russian verb word formation, §2.2.10.3</a>. The general word-formation pattern supports new contextual formations as well as established words; dictionary absence alone does not make a productive formation ungrammatical.</p>
+      <p>Prefix references: <a href="https://russian.cornell.edu/grammar/html/gr12_b_a.htm">Cornell: prefixed motion verbs</a>; <a href="https://www.mangolanguages.com/resources/learn/grammar/russian/how-to-use-prefixed-verbs-of-motion-in-russian-/ru15-how-to-use-prefixed-verbs-of-motion-in-russian-">Mango: prefixes</a>; <a href="https://gramota.ru/">Gramota dictionaries</a> (including <a href="https://gramota.ru/meta/ulezt">уле́зть</a> and <a href="https://gramota.ru/meta/pribredat">прибреда́ть</a>).</p>
+      <p>Base reference tables: <a href="https://learnrussianstepbystep.com/en/russian-verbs-of-motion/">Learn Russian Step by Step</a>;
+      <a href="https://www.mangolanguages.com/resources/learn/grammar/russian/how-to-use-verbs-of-motion-in-russian-/study-resource-conjugating-russian-verbs-of-motion">Mango Languages</a>;
+      <a href="https://russianschoolrussificate.com/tip/russian-verbs-of-motion-polzti-polzat-lezt-lazat-bresti-brodit-and-tashhit-taskat/">Russificate</a>.</p>
+    </details>
+    <noscript><p>Enable JavaScript to display the verb grid.</p></noscript>
+  </main>
+  <dialog id="conjugation-dialog" class="conjugation-dialog" aria-labelledby="conjugation-title">
+    <div class="dialog-header">
+      <div><h2 id="conjugation-title">Conjugation</h2><p id="conjugation-context" class="popup-note"></p></div>
+      <button id="conjugation-close" class="dialog-close" type="button" autofocus>Close</button>
+    </div>
+    <div id="conjugation-content"></div>
+  </dialog>
+  <div id="usage-tooltip" class="usage-tooltip" role="tooltip" hidden></div>
+    <script src="linguistic-data.js" data-inline></script>
+  <script src="linguistic-core.js" data-inline></script>
+  <script src="application-state.js" data-inline></script>
+  <script src="view-model.js" data-inline></script>
+  <script src="presentation.js" data-inline></script>
+  <script src="bootstrap.js" data-inline></script>
+</body>
+</html>
