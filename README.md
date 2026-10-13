@@ -1,6 +1,6 @@
-# Russian verbs of motion
+# Khod
 
-A dependency-free browser application. Development sources are separate readable files; the release is one standalone HTML file. Both versions execute the same JavaScript.
+A dependency-free browser application for exploring Russian verbs of motion. Development sources are separate readable files; the release is one standalone HTML file. Both versions execute the same JavaScript.
 
 ## Run locally
 
