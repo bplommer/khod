@@ -7,7 +7,7 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); line-height: 1.15; margin: 10px 0 12
 .intro { color: var(--muted); margin: 0 0 26px; }
 .control-panel { background: #f4f6f1; padding: 10px 0 2px; margin-bottom: 18px; }
 .control-panel.is-sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 4px 8px -6px #23332f70; }
-.controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: flex-start; margin-bottom: 18px; }
+.controls { display: flex; gap: 16px 40px; flex-wrap: wrap; align-items: center; justify-content: flex-start; margin-bottom: 18px; }
 label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding: 10px 0; font-family: Arial, sans-serif; }
 input { width: 21px; height: 21px; margin: 0; accent-color: var(--green); cursor: pointer; }
 input:focus-visible { outline: 3px solid #69a991; outline-offset: 4px; }
