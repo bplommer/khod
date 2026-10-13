@@ -22,6 +22,7 @@ globalThis.MotionUI = (() => {
 
     const rows = document.getElementById('verb-rows');
     const mode = document.getElementById('mode');
+    const showObjects = document.getElementById('show-objects');
     const pronounOptions = document.getElementById('pronoun-options');
     const numberOptions = document.getElementById('number-options');
     const personOptions = document.getElementById('person-options');
@@ -42,6 +43,7 @@ globalThis.MotionUI = (() => {
       setRadioValue(genderRadios, state.gender);
       setRadioValue(pronounRadios, state.pronoun);
       setRadioValue(prefixRadios, state.prefix);
+      showObjects.checked = state.showObjects;
       singular.checked = state.number === 'singular';
       plural.checked = state.number === 'plural';
     }
@@ -154,6 +156,13 @@ globalThis.MotionUI = (() => {
       word.lang = 'ru';
       word.textContent = model.form || '—';
       cell.append(word);
+      if (model.object) {
+        const object = document.createElement('span');
+        object.className = 'popup-subject popup-object';
+        object.lang = 'ru';
+        object.textContent = ' ' + model.object;
+        cell.append(object);
+      }
       return cell;
     }
 
@@ -233,7 +242,7 @@ globalThis.MotionUI = (() => {
       appendUsageIcon(parent, explanation, 'irregular');
     }
 
-    function renderVariant(cell, variant, tense, isPlural, person, gender, irregularExplanation) {
+    function renderVariant(cell, variant, tense, isPlural, person, gender, irregularExplanation, object) {
       const { form, unavailable, inappropriate, reason } = Model.describeForm(variant, tense, isPlural, person, gender);
       const word = document.createElement(inappropriate && !unavailable ? 's' : 'span');
       word.className = 'verb-form';
@@ -250,6 +259,12 @@ globalThis.MotionUI = (() => {
           word.append(pronoun);
         }
         word.append(document.createTextNode(form));
+        if (state.showObjects && object) {
+          const pronoun = document.createElement('span');
+          pronoun.className = 'pronoun';
+          pronoun.textContent = ' ' + object;
+          word.append(pronoun);
+        }
       }
       if (variant.usageInfo) appendUsageIcon(word, variant.usageInfo);
       cell.append(word);
@@ -316,7 +331,7 @@ globalThis.MotionUI = (() => {
             event.preventDefault();
             openConjugation(family, direction, prefix, tense, cell);
           });
-          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation);
+          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation, family.object);
           row.append(cell);
         }
         fragment.append(row);
@@ -332,6 +347,7 @@ globalThis.MotionUI = (() => {
     for (const [type, radios] of [['prefix', prefixRadios], ['tense', tenseRadios], ['pronoun', pronounRadios], ['person', personRadios], ['gender', genderRadios]]) {
       for (const radio of radios) radio.addEventListener('change', () => dispatch({ type, value: radio.value }));
     }
+    showObjects.addEventListener('change', () => dispatch({ type: 'showObjects', value: showObjects.checked }));
     singular.addEventListener('change', () => dispatch({ type: 'number', value: 'singular' }));
     plural.addEventListener('change', () => dispatch({ type: 'number', value: 'plural' }));
     render();

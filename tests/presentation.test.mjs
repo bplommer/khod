@@ -93,3 +93,32 @@ test('po is an exclusive prefix choice and updates grid and popup',()=>{
   choose('prefix-u');assert(!e['prefix-po'].checked);assert(e['verb-rows'].text.includes('уйду́'));
   assert.throws(()=>ui.dispatch({type:'outerPo',value:true}));
 });
+
+test('object examples use family semantics and the checkbox controls grid and popup',()=>{
+  const {elements:e,choose,ui}=app();
+  const rows=()=>e['verb-rows'].children;
+  assert(e['show-objects'].checked);
+  assert(!rows()[0].text.includes('что́-то'));
+  for(const [index,object] of [[8,'что́-то/кого́-то'],[9,'что́-то/кого́-то'],[10,'кого́-то'],[11,'что́-то/кого́-то'],[12,'что́-то'],[13,'кого́-то']]) {
+    const pronouns=descendants(rows()[index],'span').filter(node=>node.className==='pronoun');
+    assert.equal(pronouns.length,2);
+    assert(pronouns.every(node=>node.text===' '+object));
+  }
+  choose('tense-present');
+  assert(rows()[8].text.includes('я несу́ что́-то/кого́-то'));
+  rows()[8].children[1].fire('click');
+  assert(e['conjugation-content'].text.includes('что́-то/кого́-то'));
+  e['conjugation-dialog'].close();
+  e['show-objects'].checked=false;e['show-objects'].fire('change');
+  assert.equal(ui.getState().showObjects,false);
+  assert(!e['verb-rows'].text.includes('что́-то'));
+  assert(e['verb-rows'].text.includes('я несу́'));
+  rows()[8].children[1].fire('click');
+  assert(!e['conjugation-content'].text.includes('что́-то'));
+  e['conjugation-dialog'].close();
+  choose('prefix-pri');
+  choose('show-objects');
+  assert(!rows()[8].children[1].text.includes('что́-то'));
+  assert(rows()[8].children[2].text.includes('что́-то/кого́-то'));
+  choose('tense-future');assert(rows()[8].children[1].text.includes('что́-то/кого́-то'));
+});
