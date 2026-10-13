@@ -30,9 +30,6 @@ label:has(input[type="radio"]:checked)::after { content: ""; position: absolute;
 label:has(input[type="radio"]):hover { color: var(--green); }
 label:has(input[type="radio"]:focus-visible) { outline: 3px solid #69a991; outline-offset: 4px; border-radius: 2px; }
 .prefix-info { color: var(--muted); font-size: .88rem; margin: 0 0 20px; min-height: 2.6em; }
-.distributive-comparison { background: #eaf0e7; border-left: 3px solid var(--green); padding: 12px 16px; margin: -6px 0 22px; font-size: .85rem; color: var(--muted); }
-.distributive-comparison[hidden] { display: none; }
-.distributive-comparison p { margin: 6px 0; }
 .form-meta { display: block; font: .7rem/1.4 system-ui, sans-serif; color: var(--green); margin: 4px 0 8px; }
 .cell-note { display: block; font: .75rem/1.45 system-ui, sans-serif; color: var(--muted); margin: 6px 0; }
 .irregular-label { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
