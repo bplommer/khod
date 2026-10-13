@@ -53,7 +53,7 @@ globalThis.MotionViewModel = (() => {
         const subject = tense === 'past'
           ? (isPlural ? 'они́' : { masculine: 'он', feminine: 'она́', neuter: 'оно́' }[gender])
           : (isPlural ? { '1': 'мы', '2': 'вы', '3': 'они́' }[person] : { '1': 'я', '2': 'ты', '3': 'он / она́ / оно́' }[person]);
-        return { ...description, subject };
+        return { ...description, subject, object: state.showObjects && !description.unavailable ? family.object || '' : '' };
       }
       const rows = tense === 'past'
         ? [['Masculine', false, 'masculine'], ['Feminine', false, 'feminine'], ['Neuter', false, 'neuter'], ['Plural', true, 'masculine']].map(([label, plural, gender]) => ({ label, cells: [cell(plural, '3', gender)] }))

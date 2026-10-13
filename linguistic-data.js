@@ -430,6 +430,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "carry",
+    "object": "что́-то/кого́-то",
     "movement": "Carry in the hands / on the body",
     "base": {
       "uni": [
@@ -466,6 +467,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "transport",
+    "object": "что́-то/кого́-то",
     "movement": "Transport by vehicle",
     "base": {
       "uni": [
@@ -502,6 +504,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "lead",
+    "object": "кого́-то",
     "movement": "Lead / accompany",
     "base": {
       "uni": [
@@ -538,6 +541,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "drag",
+    "object": "что́-то/кого́-то",
     "movement": "Drag / haul",
     "base": {
       "uni": [
@@ -590,6 +594,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "roll",
+    "object": "что́-то",
     "movement": "Roll / wheel something",
     "base": {
       "uni": [
@@ -642,6 +647,7 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "herd",
+    "object": "кого́-то",
     "movement": "Drive / chase / herd",
     "base": {
       "uni": [

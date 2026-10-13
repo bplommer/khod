@@ -15,6 +15,7 @@ globalThis.MotionState = (() => {
   };
   const values = {
     prefix: ['none', 'pri', 'u', 'po'],
+    showObjects: [true, false],
     tense: ['infinitive', 'past', 'present', 'future'],
     person: ['1', '2', '3'],
     number: ['singular', 'plural'],
@@ -22,7 +23,7 @@ globalThis.MotionState = (() => {
     pronoun: Object.keys(pronounSpecs)
   };
   function initialState() {
-    return { prefix: 'none', tense: 'infinitive', person: '1', number: 'singular', gender: 'masculine', pronoun: 'ya' };
+    return { showObjects: true, prefix: 'none', tense: 'infinitive', person: '1', number: 'singular', gender: 'masculine', pronoun: 'ya' };
   }
   function reconcileAgreement(state) {
     if (state.tense === 'infinitive') return state;
