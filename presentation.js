@@ -253,12 +253,16 @@ globalThis.MotionUI = (() => {
         }
         word.append(document.createTextNode(form));
       }
-      const uncommon = variant.usageInfo?.startsWith('Productive / uncommon formation:');
-      if (variant.usageInfo && !uncommon) appendUsageIcon(word, variant.usageInfo);
+      const objectExplanation = 'Distribution may be over multiple moved objects or people, so a singular subject is valid.';
+      const hasObjectExplanation = variant.usageInfo?.includes(objectExplanation);
+      const usageInfo = hasObjectExplanation ? variant.usageInfo.replace(objectExplanation, '').trim() : variant.usageInfo;
+      const multipleObjects = hasObjectExplanation && !isPlural && tense !== 'infinitive';
+      const uncommon = usageInfo?.startsWith('Productive / uncommon formation:');
+      if (usageInfo && !uncommon) appendUsageIcon(word, usageInfo);
       cell.append(word);
       const irregularNote = irregularExplanation && variant.note?.includes(irregularExplanation) ? irregularExplanation : null;
       const regularNote = irregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
-      if (regularNote || irregularNote || reason || inappropriate || uncommon) {
+      if (regularNote || irregularNote || reason || inappropriate || uncommon || multipleObjects) {
         const note = document.createElement('span');
         note.className = 'cell-note';
         note.lang = 'en';
@@ -269,7 +273,11 @@ globalThis.MotionUI = (() => {
         }
         if (uncommon) {
           if (note.textContent || irregularNote) note.append(document.createTextNode(' '));
-          appendUsageIcon(note, variant.usageInfo, 'uncommon');
+          appendUsageIcon(note, usageInfo, 'uncommon');
+        }
+        if (multipleObjects) {
+          if (note.textContent || irregularNote || uncommon) note.append(document.createTextNode(' '));
+          appendUsageIcon(note, objectExplanation, 'multiple objects');
         }
         cell.append(note);
       }
