@@ -103,18 +103,18 @@ globalThis.MotionUI = (() => {
       }, 150);
     }
 
-    function appendUsageIcon(cell, text, irregular = false) {
+    function appendUsageIcon(cell, text, label = '') {
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = irregular ? 'irregular-label' : 'info-button';
-      button.textContent = irregular ? 'irregular' : 'i';
+      button.className = label ? 'irregular-label' : 'info-button';
+      button.textContent = label || 'i';
       button.lang = 'en';
-      button.setAttribute('aria-label', irregular ? 'Irregular form information' : 'Usage information');
+      button.setAttribute('aria-label', label ? label + ' form information' : 'Usage information');
       button.setAttribute('aria-expanded', 'false');
       function revealTooltip() {
         clearTimeout(tooltipShowTimer);
         if (activeInfoButton === button && tooltipPinned) return;
-        if (irregular) tooltipShowTimer = setTimeout(() => showUsageTooltip(button, text), 100);
+        if (label) tooltipShowTimer = setTimeout(() => showUsageTooltip(button, text), 100);
         else showUsageTooltip(button, text);
       }
       button.addEventListener('pointerenter', revealTooltip);
@@ -232,7 +232,7 @@ globalThis.MotionUI = (() => {
     });
 
     function appendIrregularLabel(parent, explanation) {
-      appendUsageIcon(parent, explanation, true);
+      appendUsageIcon(parent, explanation, 'irregular');
     }
 
     function renderVariant(cell, variant, tense, isPlural, person, gender, irregularExplanation) {
@@ -253,11 +253,16 @@ globalThis.MotionUI = (() => {
         }
         word.append(document.createTextNode(form));
       }
-      if (variant.usageInfo) appendUsageIcon(word, variant.usageInfo);
+      const objectExplanation = 'Distribution may be over multiple moved objects or people, so a singular subject is valid.';
+      const hasObjectExplanation = variant.usageInfo?.includes(objectExplanation);
+      const usageInfo = hasObjectExplanation ? variant.usageInfo.replace(objectExplanation, '').trim() : variant.usageInfo;
+      const multipleObjects = hasObjectExplanation && !isPlural && tense !== 'infinitive';
+      const uncommon = usageInfo?.startsWith('Productive / uncommon formation:');
+      if (usageInfo && !uncommon) appendUsageIcon(word, usageInfo);
       cell.append(word);
       const irregularNote = irregularExplanation && variant.note?.includes(irregularExplanation) ? irregularExplanation : null;
       const regularNote = irregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
-      if (regularNote || irregularNote || reason || inappropriate) {
+      if (regularNote || irregularNote || reason || inappropriate || uncommon || multipleObjects) {
         const note = document.createElement('span');
         note.className = 'cell-note';
         note.lang = 'en';
@@ -265,6 +270,14 @@ globalThis.MotionUI = (() => {
         if (irregularNote) {
           if (note.textContent) note.append(document.createTextNode(' '));
           appendIrregularLabel(note, irregularNote);
+        }
+        if (uncommon) {
+          if (note.textContent || irregularNote) note.append(document.createTextNode(' '));
+          appendUsageIcon(note, usageInfo, 'uncommon');
+        }
+        if (multipleObjects) {
+          if (note.textContent || irregularNote || uncommon) note.append(document.createTextNode(' '));
+          appendUsageIcon(note, objectExplanation, 'multiple objects');
         }
         cell.append(note);
       }
