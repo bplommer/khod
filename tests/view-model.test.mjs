@@ -8,7 +8,7 @@ test('grid models cover all finite control combinations without DOM access', () 
     const state = { ...State.initialState(), prefix, outerPo, tense, number, person, gender };
     const model = Model.grid(state);
     assert.equal(model.rows.length,14);
-    assert.deepEqual(plain(model.visibility), { number: tense !== 'infinitive', person: ['present','future'].includes(tense), gender: tense === 'past' && number === 'singular' });
+    assert.deepEqual(plain(model.visibility), { pronoun: tense !== 'infinitive', number: tense !== 'infinitive', person: ['present','future'].includes(tense), gender: tense === 'past' && number === 'singular' });
     for (const row of model.rows) for (const direction of ['uni','multi']) for (const variant of row.cells[direction]) {
       const description = Model.describeForm(variant,tense,number==='plural',person,gender);
       assert(description.form === null || typeof description.form === 'string');

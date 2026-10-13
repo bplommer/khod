@@ -14,7 +14,7 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); line-height: 1.15; margin: 10px 0 12
 .intro { color: var(--muted); margin: 0 0 26px; }
 .control-panel { background: #f4f6f1; padding: 10px 0 2px; margin-bottom: 18px; }
 .control-panel.is-sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 4px 8px -6px #23332f70; }
-.controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: flex-start; margin-bottom: 18px; }
 label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding: 10px 0; font-family: Arial, sans-serif; }
 input { width: 21px; height: 21px; margin: 0; accent-color: var(--green); cursor: pointer; }
 input:focus-visible { outline: 3px solid #69a991; outline-offset: 4px; }
@@ -22,7 +22,8 @@ input:focus-visible { outline: 3px solid #69a991; outline-offset: 4px; }
 .number-options[hidden] { display: none; }
 .number-options legend { font-size: .75rem; color: var(--muted); }
 .number-options label { font-size: .85rem; padding: 6px 0; }
-.prefix-options { display: flex; gap: 18px; flex-wrap: wrap; border: 0; padding: 0; margin: 0 0 14px; }
+.prefix-options { display: flex; gap: 18px; flex-wrap: wrap; border: 0; padding: 0; margin: 0; }
+.control-panel > .control-row { margin-bottom: 18px; }
 .prefix-options legend { font-size: .75rem; color: var(--muted); }
 .prefix-options label { font-size: .9rem; padding: 8px 0; }
 .prefix-info { color: var(--muted); font-size: .88rem; margin: 0 0 20px; min-height: 2.6em; }
@@ -38,7 +39,7 @@ input:focus-visible { outline: 3px solid #69a991; outline-offset: 4px; }
 .usage-tooltip[hidden] { display: none; }
 .unavailable { display: block; min-height: 1.5em; }
 s { text-decoration-thickness: 2px; color: #86554c; }
-#mode { font-family: Arial, sans-serif; font-size: .85rem; color: var(--green); background: #e3eee5; padding: 6px 12px; border-radius: 20px; }
+#mode { display: block; width: fit-content; margin-bottom: 18px; font-family: Arial, sans-serif; font-size: .85rem; color: var(--green); background: #e3eee5; padding: 6px 12px; border-radius: 20px; }
 .table-wrap { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: white; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 
@@ -94,7 +95,7 @@ a { color: var(--green); text-underline-offset: 3px; }
       <p class="intro">Explore base verbs and their standard prefixed forms, with stress and aspect shown.</p>
     </header>
     <div id="control-panel" class="control-panel">
-    <div class="prefix-options">
+    <div class="prefix-options control-row">
       <label><input type="checkbox" id="outer-po" aria-controls="verbs prefix-info distributive-comparison"><span lang="ru">по-</span></label>
       <fieldset class="prefix-options" id="prefix-options">
       <legend>Directional prefix</legend>
@@ -103,7 +104,14 @@ a { color: var(--green); text-underline-offset: 3px; }
       <label><input type="radio" name="prefix" id="prefix-u" value="u"><span lang="ru">у-</span></label>
       </fieldset>
     </div>
-    <fieldset id="pronoun-options" class="number-options" style="margin-bottom: 18px;">
+    <fieldset id="tense-options" class="number-options control-row">
+      <legend>Form / tense</legend>
+      <label><input type="radio" name="tense" id="tense-infinitive" value="infinitive" checked>Infinitive</label>
+      <label><input type="radio" name="tense" id="tense-past" value="past">Past</label>
+      <label><input type="radio" name="tense" id="tense-present" value="present">Present</label>
+      <label><input type="radio" name="tense" id="tense-future" value="future">Future</label>
+    </fieldset>
+    <fieldset id="pronoun-options" class="number-options control-row" hidden>
       <legend>Example subject</legend>
       <label><input type="radio" name="pronoun" id="pronoun-ya" value="ya" checked><span lang="ru">я</span></label>
       <label><input type="radio" name="pronoun" id="pronoun-my" value="my"><span lang="ru">мы</span></label>
@@ -115,13 +123,6 @@ a { color: var(--green); text-underline-offset: 3px; }
       <label><input type="radio" name="pronoun" id="pronoun-oni" value="oni"><span lang="ru">они́</span></label>
     </fieldset>
     <div class="controls">
-      <fieldset id="tense-options" class="number-options">
-        <legend>Form / tense</legend>
-        <label><input type="radio" name="tense" id="tense-infinitive" value="infinitive" checked>Infinitive</label>
-        <label><input type="radio" name="tense" id="tense-past" value="past">Past</label>
-        <label><input type="radio" name="tense" id="tense-present" value="present">Present</label>
-        <label><input type="radio" name="tense" id="tense-future" value="future">Future</label>
-      </fieldset>
       <fieldset id="number-options" class="number-options" hidden>
         <legend>Number</legend>
         <label><input type="radio" name="number" id="singular" value="singular" checked>Singular</label>
@@ -139,8 +140,8 @@ a { color: var(--green); text-underline-offset: 3px; }
         <label><input type="radio" name="gender" id="gender-feminine" value="feminine">Feminine · <span lang="ru">она́</span></label>
         <label><input type="radio" name="gender" id="gender-neuter" value="neuter">Neuter · <span lang="ru">оно́</span></label>
       </fieldset>
-      <span id="mode" role="status" aria-live="polite">Infinitive</span>
     </div>
+    <span id="mode" role="status" aria-live="polite">Infinitive</span>
     </div>
     <p id="prefix-info" class="prefix-info"></p>
     <section id="distributive-comparison" class="distributive-comparison" aria-label="Comparing distributive stems" hidden>
@@ -164,7 +165,7 @@ a { color: var(--green); text-underline-offset: 3px; }
     <details>
       <summary>How to read this grid &amp; references</summary>
       <p>Both <span lang="ru">ла́зить</span> and <span lang="ru">ла́зать</span> are multidirectional climbing verbs. Their first-person singular forms are <span lang="ru">ла́жу</span> and <span lang="ru">ла́заю</span>, respectively; both are shown in the same cell.</p>
-      <p>The always-visible pronoun selector chooses the example subject. Past agrees in number and gender, not person, so it can use я or ты too. Present and future allow all three persons; their gender comes from the pronoun and does not change the verb ending, so the gender controls appear only for singular past forms. Number is shared across tenses; gender is shared across past singular and third-person singular. Choosing я or ты preserves a stored masculine/feminine choice, which can be changed independently for their past forms. Neuter singular uses оно́. Hidden selections are retained. A perfective verb has no present tense, so its present cell shows a dash. Future is simple for perfective verbs and буду / бу́дем + infinitive for imperfective verbs. With по-, the right column means doing the activity for a while; it is not the imperfective partner of the left column.</p>
+      <p>The pronoun selector chooses the example subject for finite forms and is hidden for infinitives. Past agrees in number and gender, not person, so it can use я or ты too. Present and future allow all three persons; their gender comes from the pronoun and does not change the verb ending, so the gender controls appear only for singular past forms. Number is shared across tenses; gender is shared across past singular and third-person singular. Choosing я or ты preserves a stored masculine/feminine choice, which can be changed independently for their past forms. Neuter singular uses оно́. Hidden selections are retained. A perfective verb has no present tense, so its present cell shows a dash. Future is simple for perfective verbs and буду / бу́дем + infinitive for imperfective verbs. With по-, the right column means doing the activity for a while; it is not the imperfective partner of the left column.</p>
       <p>The по- checkbox without a directional prefix retains the two single-prefix meanings. With при- or у-, outer по- is distributive: all or many movers arrive or leave successively. The operation can use either inner aspect stem; the result is perfective in both columns. Intransitive verbs distribute over movers; transitive verbs can distribute over moved objects or people.</p>
       <p>Singular intransitive distributive forms are struck through for a single-individual reading. They are not morphologically ungrammatical: a collective singular subject can supply multiple participants. Transitive forms remain valid with a singular subject when multiple objects supply the distribution. “Productive / uncommon” distinguishes compositional formations from familiar lexical examples; it is not an error label.</p>
       <p>The prefixed columns follow the corresponding base families, including conventional stem changes. A cell is judged in its movement sense; other dictionary meanings do not make it ungrammatical.</p>
@@ -1158,6 +1159,7 @@ globalThis.MotionState = (() => {
   }
   function visibility(state) {
     return {
+      pronoun: state.tense !== 'infinitive',
       number: state.tense !== 'infinitive',
       person: ['present', 'future'].includes(state.tense),
       gender: state.tense === 'past' && state.number === 'singular'
@@ -1255,6 +1257,7 @@ globalThis.MotionUI = (() => {
 
     const rows = document.getElementById('verb-rows');
     const mode = document.getElementById('mode');
+    const pronounOptions = document.getElementById('pronoun-options');
     const numberOptions = document.getElementById('number-options');
     const personOptions = document.getElementById('person-options');
     const genderOptions = document.getElementById('gender-options');
@@ -1509,6 +1512,7 @@ globalThis.MotionUI = (() => {
       const { tense, person, gender, prefix, outerPo } = state;
       const isPlural = state.number === 'plural';
       const settings = model.settings;
+      pronounOptions.hidden = !model.visibility.pronoun;
       numberOptions.hidden = !model.visibility.number;
       personOptions.hidden = !model.visibility.person;
       genderOptions.hidden = !model.visibility.gender;
