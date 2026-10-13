@@ -1,12 +1,12 @@
 # Khod
 
-A dependency-free browser application for exploring Russian verbs of motion. Development sources are separate readable files; the release is one standalone HTML file. Both versions execute the same JavaScript.
+A dependency-free browser application for exploring Russian verbs of motion. Development sources are separate readable files; an optional standalone HTML file can be generated locally. Both versions execute the same JavaScript.
 
 ## Run locally
 
 Open `index.html` directly in your browser. No server, installation, build step or network connection is required. Ordered classic scripts allow direct `file://` execution.
 
-Alternatively, open `dist/russian-motion-verbs.html`, the standalone release.
+To use a standalone version, run `node package.mjs` first, then open the generated `dist/russian-motion-verbs.html`. Generated releases are ignored by Git and are not committed.
 
 ## Test and package
 
@@ -17,13 +17,23 @@ node --test
 node package.mjs
 ```
 
-Packaging writes `dist/russian-motion-verbs.html`. An optional output path can be supplied:
+Packaging writes `dist/russian-motion-verbs.html` into the ignored `dist/` directory. An optional output path can be supplied:
 
 ```sh
 node package.mjs /path/to/russian-motion-verbs.html
 ```
 
 Packaging is optional for source execution. It embeds assets marked `data-inline` in `index.html`, in their existing order. It preserves formatting and does not transpile or minify. It rejects paths outside the source directory and embedded closing tags that would terminate a script/style block.
+
+## Enable the pre-push test hook
+
+After cloning, enable the committed hooks for this checkout:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+The pre-push hook runs `node --test` from the repository root and blocks the push if tests fail or Node.js is unavailable. It requires Node.js 20 or later and no npm packages. Each checkout needs this one-time configuration because Git does not enable committed hooks automatically.
 
 ## Architecture
 
