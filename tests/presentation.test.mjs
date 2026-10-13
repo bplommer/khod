@@ -6,6 +6,23 @@ import { loadPure, sourceRoot, plain } from './load-app.mjs';
 import { fixture, Element, descendants } from './dom-fixture.mjs';
 function app(timers={setTimeout:()=>0,clearTimeout(){}}){const context=loadPure();const dom=fixture(readFileSync(sourceRoot+'index.html','utf8'));Object.assign(context,timers);vm.runInContext(readFileSync(sourceRoot+'presentation.js','utf8'),context);const ui=context.MotionUI.start(dom.document,dom.window);return{...dom,ui};}
 
+test('main grid shows an explanation only when every selected form is unavailable',()=>{
+  const {elements:e,choose}=app();
+  choose('prefix-po');choose('tense-present');
+  assert(e['verb-table-wrap'].hidden);
+  assert.equal(e['verb-rows'].children.length,0);
+  assert(!e['empty-explanation'].hidden);
+  assert.equal(e['empty-explanation'].text,'Perfective verbs have no present tense. Select Future for the simple future form.');
+  choose('tense-future');
+  assert(!e['verb-table-wrap'].hidden);assert(e['empty-explanation'].hidden);
+  assert(e['verb-rows'].text.includes('пойду́'));
+  choose('tense-present');choose('prefix-pri');
+  assert(!e['verb-table-wrap'].hidden);assert(e['empty-explanation'].hidden);
+  assert(e['verb-rows'].text.includes('—'));assert(e['verb-rows'].text.includes('прихожу́'));
+  choose('prefix-none');
+  assert(!e['verb-table-wrap'].hidden);assert(e['verb-rows'].text.includes('иду́'));
+});
+
 test('source adapter renders and syncs actual control event handlers',()=>{
   const {elements:e,choose,ui}=app();choose('tense-past');choose('gender-feminine');choose('pronoun-ty');
   assert(e['verb-rows'].text.includes('ты шла'));assert.equal(ui.getState().person,'1');

@@ -275,6 +275,10 @@ globalThis.MotionUI = (() => {
       const { tense, person, gender, prefix } = state;
       const isPlural = state.number === 'plural';
       const settings = model.settings;
+      document.getElementById('verb-table-wrap').hidden = Boolean(model.emptyExplanation);
+      const emptyExplanation = document.getElementById('empty-explanation');
+      emptyExplanation.hidden = !model.emptyExplanation;
+      emptyExplanation.textContent = model.emptyExplanation || '';
       pronounOptions.hidden = !model.visibility.pronoun;
       numberOptions.hidden = !model.visibility.number;
       personOptions.hidden = !model.visibility.person;
@@ -287,7 +291,7 @@ globalThis.MotionUI = (() => {
         document.getElementById(direction + '-meta').textContent = column.meta;
       }
       const fragment = document.createDocumentFragment();
-      for (const rowModel of model.rows) {
+      for (const rowModel of model.emptyExplanation ? [] : model.rows) {
         const family = rowModel.family;
         const row = document.createElement('tr');
         const heading = document.createElement('th');
