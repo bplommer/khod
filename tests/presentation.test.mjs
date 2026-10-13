@@ -48,3 +48,15 @@ test('irregular explanation waits 100ms and cancels on leave, Escape and rerende
   button.fire('focus');document.fire('keydown',{key:'Escape'});assert(![...pending.values()].some(task=>task.delay===100));
   button.fire('pointerenter');ui.dispatch({type:'prefix',value:'none'});assert(![...pending.values()].some(task=>task.delay===100));
 });
+
+test('pronoun selector hides for infinitives and retains the selected subject',()=>{
+  const {elements:e,choose,ui}=app();
+  assert(e['pronoun-options'].hidden);
+  for(const tense of ['past','present','future']) {
+    choose('tense-'+tense);assert(!e['pronoun-options'].hidden);
+  }
+  choose('pronoun-vy');choose('tense-infinitive');
+  assert(e['pronoun-options'].hidden);assert.equal(ui.getState().pronoun,'vy');
+  choose('tense-present');assert(!e['pronoun-options'].hidden);assert(e['pronoun-vy'].checked);
+  assert(e['verb-rows'].text.includes('вы идёте'));
+});

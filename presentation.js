@@ -22,6 +22,7 @@ globalThis.MotionUI = (() => {
 
     const rows = document.getElementById('verb-rows');
     const mode = document.getElementById('mode');
+    const pronounOptions = document.getElementById('pronoun-options');
     const numberOptions = document.getElementById('number-options');
     const personOptions = document.getElementById('person-options');
     const genderOptions = document.getElementById('gender-options');
@@ -276,6 +277,7 @@ globalThis.MotionUI = (() => {
       const { tense, person, gender, prefix, outerPo } = state;
       const isPlural = state.number === 'plural';
       const settings = model.settings;
+      pronounOptions.hidden = !model.visibility.pronoun;
       numberOptions.hidden = !model.visibility.number;
       personOptions.hidden = !model.visibility.person;
       genderOptions.hidden = !model.visibility.gender;

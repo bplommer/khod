@@ -41,7 +41,7 @@ test('all pronouns and tenses have consistent agreement and visibility', () => {
   for (const tense of State.values.tense) for (const pronoun of State.values.pronoun) {
     let state = act(act(State.initialState(), 'tense', tense), 'pronoun', pronoun);
     const spec = State.pronounSpecs[pronoun];
-    assert.deepEqual(plain(State.visibility(state)), { number: tense !== 'infinitive', person: ['present', 'future'].includes(tense), gender: tense === 'past' && spec.number === 'singular' });
+    assert.deepEqual(plain(State.visibility(state)), { pronoun: tense !== 'infinitive', number: tense !== 'infinitive', person: ['present', 'future'].includes(tense), gender: tense === 'past' && spec.number === 'singular' });
     if (tense !== 'infinitive') { assert.equal(state.number, spec.number); if (tense !== 'past') assert.equal(state.person, spec.person); }
     for (const number of State.values.number) { state = act(state, 'number', number); assert.equal(State.pronounSpecs[state.pronoun].number, number); }
   }

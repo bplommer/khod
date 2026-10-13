@@ -61,6 +61,7 @@ globalThis.MotionState = (() => {
   }
   function visibility(state) {
     return {
+      pronoun: state.tense !== 'infinitive',
       number: state.tense !== 'infinitive',
       person: ['present', 'future'].includes(state.tense),
       gender: state.tense === 'past' && state.number === 'singular'
