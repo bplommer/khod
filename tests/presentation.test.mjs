@@ -20,8 +20,8 @@ test('click, keyboard opening, info-icon separation and dialog focus restoration
   cell.fire('click',{target:{closest:()=>true}});assert(!e['conjugation-dialog'].open);
 });
 test('usage tooltip hover/tap/focus and dismiss behaviour',()=>{
-  const {elements:e,document,ui}=app();ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
-  const cell=e['verb-rows'].children[8].children[2];const button=descendants(cell,'button')[0];assert(button);assert(!cell.text.includes('Distribution may be'));
+  const {elements:e,document,ui}=app({setTimeout(fn){fn();return 0;},clearTimeout(){}});ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
+  const cell=e['verb-rows'].children[8].children[2];const button=descendants(cell,'button').find(node=>node.text==='uncommon');assert(button);assert(!cell.text.includes('Distribution may be'));
   button.fire('pointerenter');assert(!e['usage-tooltip'].hidden);assert(e['usage-tooltip'].text.includes('Distribution may be'));
   button.fire('click',{stopPropagation(){}});button.fire('click',{stopPropagation(){}});assert(e['usage-tooltip'].hidden);
   button.fire('focus');document.fire('keydown',{key:'Escape'});assert(e['usage-tooltip'].hidden);
@@ -59,4 +59,16 @@ test('pronoun selector hides for infinitives and retains the selected subject',(
   assert(e['pronoun-options'].hidden);assert.equal(ui.getState().pronoun,'vy');
   choose('tense-present');assert(!e['pronoun-options'].hidden);assert(e['pronoun-vy'].checked);
   assert(e['verb-rows'].text.includes('вы идёте'));
+});
+
+test('productive forms use an uncommon label with a delayed tooltip',()=>{
+  let callback;let delay;
+  const {elements:e,ui}=app({setTimeout(fn,ms){callback=fn;delay=ms;return 1;},clearTimeout(){}});
+  ui.dispatch({type:'prefix',value:'u'});ui.dispatch({type:'outerPo',value:true});ui.dispatch({type:'tense',value:'future'});
+  const button=descendants(e['verb-rows'],'button').find(node=>node.text==='uncommon');
+  assert(button);assert.equal(button.className,'irregular-label');
+  button.fire('pointerenter');assert(e['usage-tooltip'].hidden);assert.equal(delay,100);
+  callback();assert(!e['usage-tooltip'].hidden);
+  assert(e['usage-tooltip'].text.startsWith('Productive / uncommon formation:'));
+  button.fire('click',{stopPropagation(){}});assert.equal(button.attrs['aria-expanded'],'true');
 });
