@@ -276,9 +276,12 @@ globalThis.MotionUI = (() => {
       const isPlural = state.number === 'plural';
       const settings = model.settings;
       document.getElementById('verb-table-wrap').hidden = Boolean(model.emptyExplanation);
-      const emptyExplanation = document.getElementById('empty-explanation');
-      emptyExplanation.hidden = !model.emptyExplanation;
-      emptyExplanation.textContent = model.emptyExplanation || '';
+      document.getElementById('empty-panel').hidden = !model.emptyPanel;
+      for (const [id, key] of [['empty-tense', 'tense'], ['empty-meta', 'meta'], ['empty-title', 'title'], ['empty-explanation', 'explanation'], ['empty-next', 'next']]) {
+        const element = document.getElementById(id);
+        element.textContent = model.emptyPanel?.[key] || '';
+        element.hidden = !element.textContent;
+      }
       pronounOptions.hidden = !model.visibility.pronoun;
       numberOptions.hidden = !model.visibility.number;
       personOptions.hidden = !model.visibility.person;
