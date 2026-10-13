@@ -47,8 +47,11 @@ globalThis.MotionViewModel = (() => {
         : ['1', '2', '3'].map((person, index) => ({ label: ['1st person', '2nd person', '3rd person'][index], cells: [cell(false, person, 'masculine'), cell(true, person, 'masculine')] }));
       const singularVariant = selectedVariants(family, direction, state.prefix, state.outerPo, tense, false)[variantIndex];
       const reason = describeForm(singularVariant, tense, false, '3', 'masculine').reason;
-      const notes = [reason, variant.note, variant.usageInfo, tense === 'past' ? 'Past forms agree in gender / number, not person; я and ты can also take masculine or feminine forms.' : 'Third-person singular gender changes the pronoun, not the verb.'].filter(Boolean);
-      return { infinitive: variant.infinitive || '—', meta: [variant.aspect, tense].filter(Boolean).join(' · '), columns: tense === 'past' ? ['Gender / number', 'Form'] : ['Person', 'Singular', 'Plural'], rows, notes };
+      const irregularNote = family.directionalImperfective?.explanation;
+      const hasIrregularNote = irregularNote && variant.note?.includes(irregularNote);
+      const note = hasIrregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
+      const notes = [reason, note, variant.usageInfo, tense === 'past' ? 'Past forms agree in gender / number, not person; я and ты can also take masculine or feminine forms.' : 'Third-person singular gender changes the pronoun, not the verb.'].filter(Boolean);
+      return { infinitive: variant.infinitive || '—', meta: [variant.aspect, tense].filter(Boolean).join(' · '), columns: tense === 'past' ? ['Gender / number', 'Form'] : ['Person', 'Singular', 'Plural'], rows, notes, irregularNote: hasIrregularNote ? irregularNote : null };
     });
     return { title: family.movement, context: settings.label + ' · ' + tense + (state.tense === 'infinitive' ? ' (shown for infinitive selection)' : ''), sections };
   }

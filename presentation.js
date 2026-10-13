@@ -195,6 +195,12 @@ globalThis.MotionUI = (() => {
           note.textContent = text;
           section.append(note);
         }
+        if (sectionModel.irregularNote) {
+          const note = document.createElement('p');
+          note.className = 'popup-note';
+          appendIrregularLabel(note, sectionModel.irregularNote);
+          section.append(note);
+        }
         fragment.append(section);
       }
       conjugationContent.replaceChildren(fragment);
@@ -212,7 +218,16 @@ globalThis.MotionUI = (() => {
       conjugationOpener?.focus();
     });
 
-    function renderVariant(cell, variant, tense, isPlural, person, gender) {
+    function appendIrregularLabel(parent, explanation) {
+      const label = document.createElement('abbr');
+      label.className = 'irregular-label';
+      label.lang = 'en';
+      label.textContent = 'irregular';
+      label.setAttribute('title', explanation);
+      parent.append(label);
+    }
+
+    function renderVariant(cell, variant, tense, isPlural, person, gender, irregularExplanation) {
       const { form, unavailable, inappropriate, reason } = Model.describeForm(variant, tense, isPlural, person, gender);
       const word = document.createElement(inappropriate && !unavailable ? 's' : 'span');
       word.className = 'verb-form';
@@ -232,11 +247,17 @@ globalThis.MotionUI = (() => {
       }
       if (variant.usageInfo) appendUsageIcon(word, variant.usageInfo);
       cell.append(word);
-      if (variant.note || reason || inappropriate) {
+      const irregularNote = irregularExplanation && variant.note?.includes(irregularExplanation) ? irregularExplanation : null;
+      const regularNote = irregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
+      if (regularNote || irregularNote || reason || inappropriate) {
         const note = document.createElement('span');
         note.className = 'cell-note';
         note.lang = 'en';
-        note.textContent = [inappropriate && !unavailable ? (variant.status === 'semantic' ? 'Semantic mismatch.' : 'Unidiomatic here.') : '', reason, variant.note].filter(Boolean).join(' ');
+        note.textContent = [inappropriate && !unavailable ? (variant.status === 'semantic' ? 'Semantic mismatch.' : 'Unidiomatic here.') : '', reason, regularNote].filter(Boolean).join(' ');
+        if (irregularNote) {
+          if (note.textContent) note.append(document.createTextNode(' '));
+          appendIrregularLabel(note, irregularNote);
+        }
         cell.append(note);
       }
     }
@@ -282,7 +303,7 @@ globalThis.MotionUI = (() => {
             event.preventDefault();
             openConjugation(family, direction, prefix, outerPo, tense, cell);
           });
-          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender);
+          for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation);
           row.append(cell);
         }
         fragment.append(row);
