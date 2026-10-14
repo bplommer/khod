@@ -6,6 +6,8 @@ globalThis.MotionUI = (() => {
     const State = MotionState;
     const Model = MotionViewModel;
     let state = State.initialState();
+    let popup = null;
+    let navigation;
     const controlPanel = document.getElementById('control-panel');
     function updateStickyControls() {
       const availableHeight = window.visualViewport?.height || window.innerHeight;
@@ -144,6 +146,7 @@ globalThis.MotionUI = (() => {
     const conjugationDialog = document.getElementById('conjugation-dialog');
     const conjugationContent = document.getElementById('conjugation-content');
     let conjugationOpener = null;
+    const conjugationCells = new Map();
 
     function popupFormCell(model) {
       const cell = document.createElement('td');
@@ -166,7 +169,12 @@ globalThis.MotionUI = (() => {
       return cell;
     }
 
-    function openConjugation(family, direction, prefix, selectedTense, opener) {
+    function openConjugation(family, direction) {
+      navigation.open({ family: family.id, direction });
+    }
+
+    function showConjugation(family, direction, prefix, selectedTense) {
+      conjugationOpener = conjugationCells.get(family.id + ':' + direction) || tenseRadios.find(radio => radio.checked);
       hideUsageTooltip();
       const model = Model.conjugation({ ...state, prefix, tense: selectedTense }, family.id, direction);
       document.getElementById('conjugation-title').textContent = model.title;
@@ -223,8 +231,7 @@ globalThis.MotionUI = (() => {
       }
       conjugationContent.replaceChildren(fragment);
       conjugationDialog.append(usageTooltip);
-      conjugationOpener = opener;
-      conjugationDialog.showModal();
+      if (!conjugationDialog.open) conjugationDialog.showModal();
     }
     document.getElementById('conjugation-close').addEventListener('click', () => conjugationDialog.close());
     conjugationDialog.addEventListener('click', event => {
@@ -233,6 +240,9 @@ globalThis.MotionUI = (() => {
       if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) conjugationDialog.close();
     });
     conjugationDialog.addEventListener('close', () => {
+      // Native close events are queued; a rapid Forward may already reopen it.
+      if (conjugationDialog.open) return;
+      if (popup) navigation.close();
       hideUsageTooltip();
       usageTooltipHost?.append(usageTooltip);
       conjugationOpener?.focus();
@@ -284,6 +294,7 @@ globalThis.MotionUI = (() => {
     }
 
     function render() {
+      lastRenderedState = JSON.stringify(state);
       hideUsageTooltip();
       syncControls();
       const model = Model.grid(state);
@@ -309,6 +320,7 @@ globalThis.MotionUI = (() => {
         document.getElementById(direction + '-meta').textContent = column.meta;
       }
       const fragment = document.createDocumentFragment();
+      conjugationCells.clear();
       for (const rowModel of model.emptyExplanation ? [] : model.rows) {
         const family = rowModel.family;
         const row = document.createElement('tr');
@@ -319,17 +331,18 @@ globalThis.MotionUI = (() => {
         for (const direction of ['uni', 'multi']) {
           const cell = document.createElement('td');
           cell.lang = 'ru';
+          conjugationCells.set(family.id + ':' + direction, cell);
           cell.tabIndex = 0;
           cell.setAttribute('aria-haspopup', 'dialog');
           cell.setAttribute('aria-label', 'Show conjugation: ' + family.movement + ', ' + settings.titles[direction === 'uni' ? 0 : 1]);
           cell.addEventListener('click', event => {
             if (event.target.closest?.('.info-button, .irregular-label')) return;
-            openConjugation(family, direction, prefix, tense, cell);
+            openConjugation(family, direction);
           });
           cell.addEventListener('keydown', event => {
             if (event.target !== cell || !['Enter', ' '].includes(event.key)) return;
             event.preventDefault();
-            openConjugation(family, direction, prefix, tense, cell);
+            openConjugation(family, direction);
           });
           for (const variant of rowModel.cells[direction]) renderVariant(cell, variant, tense, isPlural, person, gender, family.directionalImperfective?.explanation, family.object);
           row.append(cell);
@@ -342,7 +355,9 @@ globalThis.MotionUI = (() => {
     }
     function dispatch(action) {
       state = State.updateState(state, action);
+      navigation.update(state);
       render();
+      if (popup) showConjugation(MotionData.motionFamilies.find(family => family.id === popup.family), popup.direction, state.prefix, state.tense);
     }
     for (const [type, radios] of [['prefix', prefixRadios], ['tense', tenseRadios], ['pronoun', pronounRadios], ['person', personRadios], ['gender', genderRadios]]) {
       for (const radio of radios) radio.addEventListener('change', () => dispatch({ type, value: radio.value }));
@@ -350,7 +365,19 @@ globalThis.MotionUI = (() => {
     showObjects.addEventListener('change', () => dispatch({ type: 'showObjects', value: showObjects.checked }));
     singular.addEventListener('change', () => dispatch({ type: 'number', value: 'singular' }));
     plural.addEventListener('change', () => dispatch({ type: 'number', value: 'plural' }));
-    render();
+    function applyURL(snapshot) {
+      state = snapshot.state;
+      popup = snapshot.popup;
+      // Avoid rebuilding the opener on Back, preserving native focus restoration.
+      if (JSON.stringify(state) !== lastRenderedState) render();
+      if (popup) {
+        const family = MotionData.motionFamilies.find(item => item.id === popup.family);
+        showConjugation(family, popup.direction, state.prefix, state.tense);
+      } else if (conjugationDialog.open) conjugationDialog.close();
+    }
+    let lastRenderedState;
+    navigation = MotionHistory.start(window, applyURL);
+    applyURL(navigation.initial);
     return Object.freeze({ dispatch, getState: () => ({ ...state }) });
 
   }

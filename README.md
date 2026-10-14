@@ -45,6 +45,8 @@ The pre-push hook runs `node --test` from the repository root and blocks the pus
 | `linguistic-core.js` | Pure prefix composition, semantic classification and inflection |
 | `application-state.js` | Pure immutable state transitions and agreement constraints |
 | `view-model.js` | Pure grid and conjugation-popup descriptions |
+| `url-state.js` | Pure, versioned URL encoding and validation |
+| `browser-history.js` | Browser history ownership and navigation |
 | `presentation.js` | DOM rendering, events, sticky controls, tooltip and native dialog |
 | `bootstrap.js` | Start the browser adapter |
 | `package.mjs` | Optional release generation |
@@ -56,7 +58,7 @@ Each layer has one explicit namespace (`MotionData`, `MotionCore`, `MotionState`
 
 ## State and actions
 
-State stores `prefix`, `tense`, `pronoun`, `number`, `person`, and `gender`. Controls project this state instead of storing it. Public updates return a new object without mutating their input:
+State stores `prefix`, `tense`, `pronoun`, `number`, `person`, `gender`, and `showObjects`. Controls project this state instead of storing it. Public updates return a new object without mutating their input:
 
 ```js
 const before = MotionState.initialState();
@@ -105,3 +107,48 @@ The DOM fixture tests application behaviour but does not emulate CSS layout, nat
 5. Sticky controls respect the half-viewport limit after resizing and option changes.
 
 The tests need no browser installation. Real-browser automation can be added later without changing the application's runtime or packaging architecture.
+
+## Shareable URLs and navigation
+
+Every selection is recorded in the URL, including hidden agreement features and
+whether object pronouns are shown. Transient tooltip, focus and scroll state are
+not recorded. HTTP/HTTPS pages use query parameters; directly opened `file://`
+pages use fragment parameters, so both source and standalone pages work from disk.
+
+```text
+?v=1&tense=past&prefix=pri&pronoun=ona&person=2&number=singular&gender=feminine&showObjects=false&popup=walk&direction=uni
+#v=1&tense=past&prefix=pri&pronoun=ona&person=2&number=singular&gender=feminine&showObjects=false&popup=walk&direction=uni
+```
+
+Parameters are emitted in the order shown. `v=1` is the schema version.
+`tense`, `prefix`, `pronoun`, `person`, `number` and `gender` use the values in
+`MotionState.values`; `showObjects` is `true` or `false`. Optional `popup` is a
+family ID from `MotionData.motionFamilies`, and `direction` is `uni` or `multi`.
+Both popup parameters must be valid to open a dialog. Missing or invalid fields
+fall back to defaults individually; subject agreement is then reconciled using
+the same rules as controls. Hidden values are retained wherever agreement allows.
+Unknown fields are ignored, duplicate fields use the first value, and an
+unsupported version restores defaults. A missing version is accepted as version 1.
+Startup and navigation canonicalize the URL with validated values.
+
+Control changes replace the current history entry without loading the page or
+adding Back steps. Opening a popup pushes one entry. Back closes it and Forward
+reopens it; Close, Escape and backdrop dismissal return to its underlying entry.
+A directly opened popup link closes by replacing its entry, keeping you in Khod.
+Entry ownership and popup-parent IDs are stored in `history.state`, surviving
+reloads. URL state alone never implies ownership of the preceding entry. Copied
+links therefore have direct-link behaviour, even if copied from an owned popup.
+HTTP URLs retain unrelated fragments; file URLs retain unrelated query strings.
+The active state parameter section is canonicalized rather than retaining unknown
+parameters. No server routes, runtime dependencies or mandatory build are needed.
+
+The URL tests exhaustively round-trip agreement selections, check malformed and
+partial inputs, both URL modes, owned/direct popup entries and ownership after
+reload. History tests use a deterministic adapter; they do not substitute for
+native browser verification. Check Back/Forward, Escape, backdrop dismissal and
+focus after reloading both source and packaged pages in each target browser.
+
+Verification for this change: all 40 Node tests and standalone packaging passed.
+Native browser automation was attempted with a separate headless Chrome profile,
+but Chrome aborted during startup in the execution environment. Native history,
+Escape handling and focus trapping therefore remain unverified in Chrome/Safari.
