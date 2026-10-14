@@ -15,13 +15,26 @@ export class Element {
   focus() { this.focused=true; }
   get text() { return this.textContent+this.children.map(child=>child.text).join(''); }
 }
-export function fixture(html) {
+export function fixture(html, href = 'https://khod.example/index.html') {
   const elements={};
   for(const match of html.matchAll(/<(\w+)\b[^>]*\bid="([^"]+)"[^>]*>/g)) {
     const node=new Element(match[1]);const tag=match[0];node.value=tag.match(/\bvalue="([^"]+)"/)?.[1];node.name=tag.match(/\bname="([^"]+)"/)?.[1];node.type=tag.match(/\btype="([^"]+)"/)?.[1];node.checked=/\bchecked\b/.test(tag);node.hidden=/\bhidden\b/.test(tag);elements[match[2]]=node;
   }
   const document={activeElement:null,events:{},getElementById:id=>elements[id],createElement:tag=>new Element(tag),createDocumentFragment:()=>new Element('fragment'),createTextNode:text=>{if(typeof text!=='string')throw Error('Missing text');const node=new Element('text');node.textContent=text;return node;},addEventListener(type,fn){(this.events[type]??=[]).push(fn);},fire(type,event){for(const fn of this.events[type]??[])fn(event);}};
   const window={innerWidth:1000,innerHeight:800,events:{},addEventListener(type,fn){(this.events[type]??=[]).push(fn);},fire(type){for(const fn of this.events[type]??[])fn();}};
+  let sequence = 0;
+  window.crypto = { randomUUID: () => 'entry-' + (++sequence) };
+  window.location = new URL(href);
+  const entries = [{ url: href, state: null }];
+  let index = 0;
+  window.history = {
+    get state() { return entries[index].state; },
+    get length() { return entries.length; },
+    replaceState(state, unused, url) { entries[index] = { state, url }; window.location = new URL(url); },
+    pushState(state, unused, url) { entries.splice(++index); entries.push({ state, url }); window.location = new URL(url); },
+    back() { if (index) { index--; window.location = new URL(entries[index].url); window.fire('popstate'); } },
+    forward() { if (index + 1 < entries.length) { index++; window.location = new URL(entries[index].url); window.fire('popstate'); } }
+  };
   function choose(id){const node=elements[id];if(node.type==='radio')for(const other of Object.values(elements))if(other.name===node.name)other.checked=false;node.checked=true;node.fire('change');}
   return {elements,document,window,choose};
 }

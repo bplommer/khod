@@ -69,5 +69,5 @@ globalThis.MotionState = (() => {
   function subject(state) {
     return state.tense === 'infinitive' ? '' : pronounSpecs[state.pronoun].text;
   }
-  return Object.freeze({ pronounSpecs, values, initialState, updateState, visibility, subject });
+  return Object.freeze({ pronounSpecs, values, initialState, reconcileAgreement, updateState, visibility, subject });
 })();

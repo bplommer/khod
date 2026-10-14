@@ -3,10 +3,10 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 export const sourceRoot = fileURLToPath(new URL('../', import.meta.url));
-export const files = ['linguistic-data.js', 'linguistic-core.js', 'application-state.js', 'view-model.js', 'presentation.js', 'bootstrap.js'];
+export const files = ['linguistic-data.js', 'linguistic-core.js', 'application-state.js', 'view-model.js', 'url-state.js', 'browser-history.js', 'presentation.js', 'bootstrap.js'];
 export function loadPure() {
-  const context = vm.createContext({});
-  for (const file of files.slice(0, 4)) vm.runInContext(readFileSync(sourceRoot + file, 'utf8'), context, { filename: file });
+  const context = vm.createContext({ URL, URLSearchParams });
+  for (const file of files.slice(0, 6)) vm.runInContext(readFileSync(sourceRoot + file, 'utf8'), context, { filename: file });
   return context;
 }
 // Bring values back into the test realm; VM objects have different prototypes.

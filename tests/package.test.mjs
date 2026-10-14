@@ -15,7 +15,7 @@ test('standalone embeds exact source assets, in order, with no external dependen
   assert(html.includes(readFileSync(sourceRoot+'styles.css','utf8')));
 });
 test('packaged app boots and has the same API and models as source',async()=>{
-  const html=await packageHtml();const dom=fixture(html);const context=vm.createContext({...dom,setTimeout:()=>0,clearTimeout(){}});
+  const html=await packageHtml();const dom=fixture(html);const context=vm.createContext({URL, URLSearchParams, ...dom,setTimeout:()=>0,clearTimeout(){}});
   for(const match of html.matchAll(/<script data-source="[^"]+">\n([\s\S]*?)<\/script>/g))vm.runInContext(match[1],context);
   assert.equal(dom.elements['verb-rows'].children.length,14);
   const source=loadPure();assert.deepEqual(plain(context.MotionViewModel.grid(context.MotionState.initialState())),plain(source.MotionViewModel.grid(source.MotionState.initialState())));
