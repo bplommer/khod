@@ -15,51 +15,53 @@
     <div id="control-panel" class="control-panel">
     <div class="prefix-options control-row">
       <fieldset class="prefix-options" id="prefix-options">
-      <legend>Prefix</legend>
-      <label><input type="radio" name="prefix" id="prefix-none" value="none" checked>No prefix</label>
-      <label><input type="radio" name="prefix" id="prefix-pri" value="pri"><span lang="ru">при-</span></label>
-      <label><input type="radio" name="prefix" id="prefix-u" value="u"><span lang="ru">у-</span></label>
-      <label><input type="radio" name="prefix" id="prefix-po" value="po"><span lang="ru">по-</span></label>
+      <legend class="visually-hidden">Prefix</legend>
+      <label data-label="No prefix"><input type="radio" name="prefix" id="prefix-none" value="none" checked><span class="choice-text">No prefix</span></label>
+      <label data-label="при-"><input type="radio" name="prefix" id="prefix-pri" value="pri"><span class="choice-text"><span lang="ru">при-</span></span></label>
+      <label data-label="у-"><input type="radio" name="prefix" id="prefix-u" value="u"><span class="choice-text"><span lang="ru">у-</span></span></label>
+      <label data-label="по-"><input type="radio" name="prefix" id="prefix-po" value="po"><span class="choice-text"><span lang="ru">по-</span></span></label>
       </fieldset>
     </div>
     <div class="form-controls control-row">
     <fieldset id="tense-options" class="number-options">
-      <legend>Form / tense</legend>
-      <label><input type="radio" name="tense" id="tense-infinitive" value="infinitive" checked>Infinitive</label>
-      <label><input type="radio" name="tense" id="tense-past" value="past">Past</label>
-      <label><input type="radio" name="tense" id="tense-present" value="present">Present</label>
-      <label><input type="radio" name="tense" id="tense-future" value="future">Future</label>
+      <legend class="visually-hidden">Form / tense</legend>
+      <label data-label="Infinitive"><input type="radio" name="tense" id="tense-infinitive" value="infinitive" checked><span class="choice-text">Infinitive</span></label>
+      <label data-label="Past"><input type="radio" name="tense" id="tense-past" value="past"><span class="choice-text">Past</span></label>
+      <label data-label="Present"><input type="radio" name="tense" id="tense-present" value="present"><span class="choice-text">Present</span></label>
+      <label data-label="Future"><input type="radio" name="tense" id="tense-future" value="future"><span class="choice-text">Future</span></label>
     </fieldset>
     <div class="subject-agreement">
     <fieldset id="pronoun-options" class="number-options" hidden>
-      <legend>Example subject</legend>
-      <label><input type="radio" name="pronoun" id="pronoun-ya" value="ya" checked><span lang="ru">я</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-my" value="my"><span lang="ru">мы</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-ty" value="ty"><span lang="ru">ты</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-vy" value="vy"><span lang="ru">вы</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-on" value="on"><span lang="ru">он</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-ona" value="ona"><span lang="ru">она́</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-ono" value="ono"><span lang="ru">оно́</span></label>
-      <label><input type="radio" name="pronoun" id="pronoun-oni" value="oni"><span lang="ru">они́</span></label>
+      <legend class="visually-hidden">Example subject</legend>
+      <label data-label="я"><input type="radio" name="pronoun" id="pronoun-ya" value="ya" checked><span class="choice-text"><span lang="ru">я</span></span></label>
+      <label data-label="мы"><input type="radio" name="pronoun" id="pronoun-my" value="my"><span class="choice-text"><span lang="ru">мы</span></span></label>
+      <label data-label="ты"><input type="radio" name="pronoun" id="pronoun-ty" value="ty"><span class="choice-text"><span lang="ru">ты</span></span></label>
+      <label data-label="вы"><input type="radio" name="pronoun" id="pronoun-vy" value="vy"><span class="choice-text"><span lang="ru">вы</span></span></label>
+      <label data-label="он"><input type="radio" name="pronoun" id="pronoun-on" value="on"><span class="choice-text"><span lang="ru">он</span></span></label>
+      <label data-label="она́"><input type="radio" name="pronoun" id="pronoun-ona" value="ona"><span class="choice-text"><span lang="ru">она́</span></span></label>
+      <label data-label="оно́"><input type="radio" name="pronoun" id="pronoun-ono" value="ono"><span class="choice-text"><span lang="ru">оно́</span></span></label>
+      <label data-label="они́"><input type="radio" name="pronoun" id="pronoun-oni" value="oni"><span class="choice-text"><span lang="ru">они́</span></span></label>
     </fieldset>
     <div class="controls">
       <fieldset id="number-options" class="number-options" hidden>
-        <legend>Number</legend>
-        <label><input type="radio" name="number" id="singular" value="singular" checked>Singular</label>
-        <label><input type="radio" name="number" id="plural" value="plural">Plural</label>
+        <legend class="visually-hidden">Number</legend>
+        <label data-label="Singular"><input type="radio" name="number" id="singular" value="singular" checked><span class="choice-text">Singular</span></label>
+        <label data-label="Plural"><input type="radio" name="number" id="plural" value="plural"><span class="choice-text">Plural</span></label>
       </fieldset>
+      <div class="agreement-options">
       <fieldset id="person-options" class="number-options" hidden>
-        <legend>Person</legend>
-        <label><input type="radio" name="person" id="person-1" value="1" checked>1st</label>
-        <label><input type="radio" name="person" id="person-2" value="2">2nd</label>
-        <label><input type="radio" name="person" id="person-3" value="3">3rd</label>
+        <legend class="visually-hidden">Person</legend>
+        <label data-label="1st"><input type="radio" name="person" id="person-1" value="1" checked><span class="choice-text">1st</span></label>
+        <label data-label="2nd"><input type="radio" name="person" id="person-2" value="2"><span class="choice-text">2nd</span></label>
+        <label data-label="3rd"><input type="radio" name="person" id="person-3" value="3"><span class="choice-text">3rd</span></label>
       </fieldset>
       <fieldset id="gender-options" class="number-options" hidden>
-        <legend>Gender</legend>
-        <label><input type="radio" name="gender" id="gender-masculine" value="masculine" checked>Masculine</label>
-        <label><input type="radio" name="gender" id="gender-feminine" value="feminine">Feminine</label>
-        <label><input type="radio" name="gender" id="gender-neuter" value="neuter">Neuter</label>
+        <legend class="visually-hidden">Gender</legend>
+        <label data-label="Masculine"><input type="radio" name="gender" id="gender-masculine" value="masculine" checked><span class="choice-text">Masculine</span></label>
+        <label data-label="Feminine"><input type="radio" name="gender" id="gender-feminine" value="feminine"><span class="choice-text">Feminine</span></label>
+        <label data-label="Neuter"><input type="radio" name="gender" id="gender-neuter" value="neuter"><span class="choice-text">Neuter</span></label>
       </fieldset>
+      </div>
     </div>
     </div>
     </div>
