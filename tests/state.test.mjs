@@ -25,11 +25,27 @@ test('number changes retain subject person and third-singular gender', () => {
   state = act(state, 'number', 'plural'); assert.equal(state.pronoun, 'vy');
   state = act(state, 'tense', 'past'); assert.equal(state.number, 'plural');
 });
-test('neuter past requires оно; masculine/feminine can retain я', () => {
-  let state = act(State.initialState(), 'tense', 'past');
-  state = act(state, 'gender', 'neuter'); assert.equal(state.pronoun, 'ono');
-  state = act(state, 'pronoun', 'ya'); assert.equal(state.gender, 'masculine');
-  state = act(state, 'gender', 'feminine'); assert.equal(state.pronoun, 'ya');
+test('я and ты retain neuter through controls, tense changes and URL round-trips', () => {
+  const { MotionURL: codec } = loadPure();
+  for (const pronoun of ['ya', 'ty']) {
+    let state = act(act(State.initialState(), 'tense', 'past'), 'pronoun', pronoun);
+    state = act(state, 'gender', 'neuter');
+    assert.equal(state.pronoun, pronoun);
+    assert.equal(state.gender, 'neuter');
+    assert.deepEqual(plain(codec.decode(codec.encode(state)).state), plain(state));
+    for (const tense of ['present', 'future', 'infinitive', 'past']) {
+      state = act(state, 'tense', tense);
+      assert.equal(state.pronoun, pronoun);
+      assert.equal(state.gender, 'neuter');
+    }
+    state = act(state, 'number', 'plural');
+    state = act(state, 'number', 'singular');
+    assert.equal(state.pronoun, pronoun);
+    assert.equal(state.gender, 'neuter');
+    state = act(state, 'pronoun', 'ono');
+    state = act(state, 'pronoun', pronoun);
+    assert.equal(state.gender, 'neuter');
+  }
 });
 test('infinitive changes preserve latent features until a finite tense needs agreement', () => {
   let state = State.initialState();

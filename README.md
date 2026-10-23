@@ -70,7 +70,7 @@ const after = MotionState.updateState(before, {
 
 Action types match the state fields. Person uses `'1'`, `'2'`, `'3'`; other permitted values are in `MotionState.values`. Prefix choices are `none`, `pri`, `u`, and `po`; they are mutually exclusive.
 
-Pronoun selection changes only agreement features needed by the tense. Past has no person inflection, so selecting я or ты preserves latent person until present/future requires it. Masculine/feminine past can retain я/ты; neuter uses оно. Infinitive retains latent agreement features. Gender controls appear only for singular past; third-person gender is also remembered for subject transitions.
+Pronoun selection changes only agreement features needed by the tense. Past has no person inflection, so selecting я or ты preserves latent person until present/future requires it. All three past singular genders can retain я/ты. Infinitive retains latent agreement features. Gender controls appear only for singular past; third-person gender is also remembered for subject transitions.
 
 `MotionViewModel.grid(state)` produces control visibility, column metadata and derived variants. `MotionViewModel.conjugation(state, familyId, direction)` produces the popup table. Infinitive uses present in that popup, including dashes for perfectives with no present tense.
 

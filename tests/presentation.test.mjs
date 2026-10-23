@@ -122,3 +122,16 @@ test('object examples use family semantics and the checkbox controls grid and po
   assert(rows()[8].children[2].text.includes('что́-то/кого́-то'));
   choose('tense-future');assert(rows()[8].children[1].text.includes('что́-то/кого́-то'));
 });
+
+test('neuter selection keeps я and ты and renders their past forms',()=>{
+  for(const pronoun of ['ya','ty']) {
+    const {elements:e,choose,ui}=app();
+    choose('tense-past');choose('pronoun-'+pronoun);choose('gender-neuter');
+    assert.equal(ui.getState().pronoun,pronoun);
+    assert(e['pronoun-'+pronoun].checked);assert(e['gender-neuter'].checked);
+    assert(e['verb-rows'].text.includes((pronoun==='ya'?'я':'ты')+' шло'));
+    choose('tense-present');choose('tense-past');
+    assert(e['gender-neuter'].checked);
+    assert(e['verb-rows'].text.includes((pronoun==='ya'?'я':'ты')+' шло'));
+  }
+});

@@ -34,14 +34,12 @@ globalThis.MotionState = (() => {
     // subject, preserving the behaviour of the original application.
     const genderRelevant = pronoun.number === 'singular' && (state.tense === 'past' || pronoun.person === '3');
     if (genderRelevant && pronoun.gender) state.gender = pronoun.gender;
-    else if (genderRelevant && state.gender === 'neuter') state.gender = 'masculine';
     return state;
   }
   function reconcileSubject(state, feature) {
     const target = { ...pronounSpecs[state.pronoun] };
     if (feature === 'number') target.number = state.number;
     if (feature === 'person') target.person = state.person;
-    if (feature === 'gender' && state.gender === 'neuter' && target.number === 'singular') target.person = '3';
     if (target.person === '3' && target.number === 'singular') target.gender = state.gender;
     const candidate = Object.entries(pronounSpecs).find(([, pronoun]) =>
       pronoun.person === target.person && pronoun.number === target.number &&
