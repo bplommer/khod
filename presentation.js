@@ -31,7 +31,7 @@ globalThis.MotionUI = (() => {
     const genderOptions = document.getElementById('gender-options');
     const singular = document.getElementById('singular');
     const plural = document.getElementById('plural');
-    const tenseRadios = ['infinitive', 'past', 'present', 'future'].map(key => document.getElementById('tense-' + key));
+    const tenseRadios = State.values.tense.map(key => document.getElementById('tense-' + key));
     const personRadios = ['1', '2', '3'].map(key => document.getElementById('person-' + key));
     const genderRadios = ['masculine', 'feminine', 'neuter'].map(key => document.getElementById('gender-' + key));
     const pronounRadios = Object.keys(State.pronounSpecs).map(key => document.getElementById('pronoun-' + key));
@@ -150,11 +150,13 @@ globalThis.MotionUI = (() => {
 
     function popupFormCell(model) {
       const cell = document.createElement('td');
-      const subject = document.createElement('span');
-      subject.className = 'popup-subject';
-      subject.lang = 'ru';
-      subject.textContent = model.subject;
-      cell.append(subject);
+      if (model.subject) {
+        const subject = document.createElement('span');
+        subject.className = 'popup-subject';
+        subject.lang = 'ru';
+        subject.textContent = model.subject;
+        cell.append(subject);
+      }
       const word = document.createElement(!model.unavailable && model.inappropriate ? 's' : 'span');
       word.lang = 'ru';
       word.textContent = model.form || '—';
@@ -383,3 +385,4 @@ globalThis.MotionUI = (() => {
   }
   return Object.freeze({ start });
 })();
+

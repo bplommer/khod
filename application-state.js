@@ -16,7 +16,7 @@ globalThis.MotionState = (() => {
   const values = {
     prefix: ['none', 'pri', 'u', 'po'],
     showObjects: [true, false],
-    tense: ['infinitive', 'past', 'present', 'future'],
+    tense: ['infinitive', 'past', 'present', 'future', 'imperative'],
     person: ['1', '2', '3'],
     number: ['singular', 'plural'],
     gender: ['masculine', 'feminine', 'neuter'],
@@ -27,6 +27,11 @@ globalThis.MotionState = (() => {
   }
   function reconcileAgreement(state) {
     if (state.tense === 'infinitive') return state;
+    if (state.tense === 'imperative') {
+      state.person = '2';
+      state.pronoun = state.number === 'plural' ? 'vy' : 'ty';
+      return state;
+    }
     const pronoun = pronounSpecs[state.pronoun];
     state.number = pronoun.number;
     if (state.tense !== 'past') state.person = pronoun.person;
@@ -58,14 +63,15 @@ globalThis.MotionState = (() => {
   }
   function visibility(state) {
     return {
-      pronoun: state.tense !== 'infinitive',
+      pronoun: !['infinitive', 'imperative'].includes(state.tense),
       number: state.tense !== 'infinitive',
       person: ['present', 'future'].includes(state.tense),
       gender: state.tense === 'past' && state.number === 'singular'
     };
   }
   function subject(state) {
-    return state.tense === 'infinitive' ? '' : pronounSpecs[state.pronoun].text;
+    return ['infinitive', 'imperative'].includes(state.tense) ? '' : pronounSpecs[state.pronoun].text;
   }
   return Object.freeze({ pronounSpecs, values, initialState, reconcileAgreement, updateState, visibility, subject });
 })();
+

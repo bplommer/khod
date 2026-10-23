@@ -31,9 +31,12 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
       const usage = usageNotes[family.id]?.[prefixKey];
       const note = [usage?.[direction] || usage?.both, stemChange?.explanation].filter(Boolean).join(' ');
       return paradigms.map((paradigm, index) => {
+        if (prefix.kind !== 'unprefixed' && direction === 'uni' && family.prefixedImperative) {
+          paradigm = { ...paradigm, imperativeSg: family.prefixedImperative };
+        }
         const forms = prefix.kind === 'unprefixed'
           ? { ...paradigm }
-          : Object.fromEntries(Object.entries(paradigm).map(([field, form]) => [field, attachPrefix(prefix.surface, form)]));
+          : Object.fromEntries(Object.entries(paradigm).map(([field, form]) => [field, form === null ? null : attachPrefix(prefix.surface, form)]));
         return { ...forms, aspect: prefix.aspects[direction], status: 'valid', ...(note && index === 0 ? { note } : {}) };
       });
     }
@@ -50,6 +53,8 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
     function formFor(variant, tense, isPlural, person, gender) {
       if (['ungrammatical', 'not-modelled'].includes(variant.status) || (tense === 'present' && variant.aspect === 'perfective')) return null;
       if (tense === 'infinitive') return variant.infinitive;
+      if (tense === 'imperative') return person !== '2' || variant.imperativeSg === null
+        ? null : isPlural ? attachPrefix('', variant.imperativeSg) + 'те' : variant.imperativeSg;
       if (tense === 'past') return variant[isPlural ? 'pastPl' : { masculine: 'pastM', feminine: 'pastF', neuter: 'pastN' }[gender]];
       const agreement = person + (isPlural ? 'pl' : 'sg');
       return tense === 'future' && variant.aspect === 'imperfective'
@@ -59,3 +64,4 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
 
   return Object.freeze({ attachPrefix, variantsFor, settingsFor, selectedVariants, formFor });
 })();
+

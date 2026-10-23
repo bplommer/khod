@@ -49,3 +49,45 @@ test('every generated paradigm is complete and stress marks combine with vowels'
     }
   }
 });
+
+
+test('imperative irregulars, stress shifts, bound stems and plural stress', () => {
+  // Independent expected forms; do not derive these from the implementation.
+  const expected = {
+    walk: ['иди́','ходи́'], vehicle: [null,'е́зди'], run: ['беги́','бе́гай'],
+    fly: ['лети́','лета́й'], swim: ['плыви́','пла́вай'], crawl: ['ползи́','по́лзай'],
+    climb: ['лезь','лазь'], trudge: ['бреди́','броди́'], carry: ['неси́','носи́'],
+    transport: ['вези́','вози́'], lead: ['веди́','води́'], drag: ['тащи́','таска́й'],
+    roll: ['кати́','ката́й'], herd: ['гони́','гоня́й']
+  };
+  for (const [id, forms] of Object.entries(expected)) {
+    for (const [i, direction] of ['uni','multi'].entries()) {
+      assert.equal(Core.formFor(verb(id,direction),'imperative',false,'2','neuter'),forms[i]);
+    }
+  }
+  for (const [id,direction,prefix,singular,plural] of [
+    ['walk','uni','pri','приди́','приди́те'], ['walk','uni','u','уйди́','уйди́те'],
+    ['walk','uni','po','пойди́','пойди́те'], ['vehicle','uni','pri','приезжа́й','приезжа́йте'],
+    ['vehicle','uni','u','уезжа́й','уезжа́йте'], ['vehicle','uni','po','поезжа́й','поезжа́йте'],
+    ['run','multi','pri','прибега́й','прибега́йте'], ['run','multi','po','побе́гай','побе́гайте'],
+    ['climb','uni','none','лезь','ле́зьте'], ['climb','multi','none','лазь','ла́зьте'],
+    ['climb','uni','u','уле́зь','уле́зьте'], ['swim','multi','u','уплыва́й','уплыва́йте'],
+    ['drag','multi','u','ута́скивай','ута́скивайте'], ['roll','multi','pri','прика́тывай','прика́тывайте'],
+    ['crawl','multi','pri','приполза́й','приполза́йте']
+  ]) {
+    assert.equal(Core.formFor(verb(id,direction,prefix),'imperative',false,'2','masculine'),singular);
+    assert.equal(Core.formFor(verb(id,direction,prefix),'imperative',true,'2','feminine'),plural);
+  }
+  assert.equal(Core.selectedVariants(family('climb'),'multi','none')[1].imperativeSg,'ла́зай');
+  for (const f of Data.motionFamilies) for (const direction of ['uni','multi']) for (const prefix of ['none','pri','u','po']) {
+    for (const variant of Core.selectedVariants(f,direction,prefix)) for (const plural of [false,true]) {
+      const form = Core.formFor(variant,'imperative',plural,'2','neuter');
+      assert(form === null || (typeof form === 'string' && form.length > 0));
+      if (form !== null) {
+        assert(!/(?<![аеёиоуыэюя])́/u.test(form));
+        if (form.match(/[аеёиоуыэюя]/g).length > 1) assert(/[́ё]/.test(form),form);
+      }
+      for (const person of ['1','3']) assert.equal(Core.formFor(variant,'imperative',plural,person,'masculine'),null);
+    }
+  }
+});

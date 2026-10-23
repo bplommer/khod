@@ -56,9 +56,9 @@ test('infinitive changes preserve latent features until a finite tense needs agr
 test('all pronouns and tenses have consistent agreement and visibility', () => {
   for (const tense of State.values.tense) for (const pronoun of State.values.pronoun) {
     let state = act(act(State.initialState(), 'tense', tense), 'pronoun', pronoun);
-    const spec = State.pronounSpecs[pronoun];
-    assert.deepEqual(plain(State.visibility(state)), { pronoun: tense !== 'infinitive', number: tense !== 'infinitive', person: ['present', 'future'].includes(tense), gender: tense === 'past' && spec.number === 'singular' });
-    if (tense !== 'infinitive') { assert.equal(state.number, spec.number); if (tense !== 'past') assert.equal(state.person, spec.person); }
+    const spec = State.pronounSpecs[state.pronoun];
+    assert.deepEqual(plain(State.visibility(state)), { pronoun: !['infinitive', 'imperative'].includes(tense), number: tense !== 'infinitive', person: ['present', 'future'].includes(tense), gender: tense === 'past' && spec.number === 'singular' });
+    if (tense !== 'infinitive') { assert.equal(state.number, spec.number); if (tense !== 'past') assert.equal(state.person, tense === 'imperative' ? '2' : spec.person); }
     for (const number of State.values.number) { state = act(state, 'number', number); assert.equal(State.pronounSpecs[state.pronoun].number, number); }
   }
 });
@@ -67,5 +67,30 @@ test('prefix changes never change subject/agreement/tense', () => {
   for (const [type, value] of [['prefix', 'pri'], ['prefix', 'po']]) {
     const next = act(state, type, value);
     for (const key of ['pronoun', 'person', 'number', 'gender', 'tense']) assert.equal(next[key], state[key]);
+  }
+});
+
+
+test('imperative forces shared second person, retains number and gender, and persists on exit', () => {
+  for (const tense of ['infinitive', 'past', 'present', 'future']) {
+    for (const pronoun of State.values.pronoun) for (const number of State.values.number) {
+      let before = act(act(State.initialState(), 'tense', tense), 'pronoun', pronoun);
+      before = act(act(before, 'number', number), 'gender', 'neuter');
+      const snapshot = plain(before);
+      let state = act(before, 'tense', 'imperative');
+      assert.deepEqual(plain(before), snapshot);
+      assert.equal(state.person, '2');
+      assert.equal(state.number, before.number);
+      assert.equal(state.gender, 'neuter');
+      assert.equal(state.pronoun, before.number === 'plural' ? 'vy' : 'ty');
+      assert.deepEqual(plain(State.visibility(state)), {pronoun:false,number:true,person:false,gender:false});
+      assert.equal(State.subject(state), '');
+      state = act(state, 'number', state.number === 'plural' ? 'singular' : 'plural');
+      const imperative = plain(state);
+      for (const nextTense of ['infinitive', 'past', 'present', 'future']) {
+        const next = act(state, 'tense', nextTense);
+        for (const field of ['person', 'number', 'pronoun', 'gender']) assert.equal(next[field], imperative[field]);
+      }
+    }
   }
 });

@@ -9,7 +9,9 @@ globalThis.MotionViewModel = (() => {
     const inappropriate = ['semantic', 'unidiomatic'].includes(variant.status);
     const reason = !['not-modelled', 'ungrammatical'].includes(variant.status) && tense === 'present' && variant.aspect === 'perfective'
       ? 'Perfective verbs have no present tense. Select Future for the simple future form.'
-      : variant.explanation;
+      : tense === 'imperative' && variant.imperativeSg === null
+        ? 'Е́хать has no direct standard imperative. Use поезжа́й / поезжа́йте (shown under по-).'
+        : variant.explanation;
     return { form, unavailable: form === null, inappropriate, reason };
   }
   function grid(state) {
@@ -24,7 +26,7 @@ globalThis.MotionViewModel = (() => {
     const rows = motionFamilies.map(family => ({ family, cells: Object.fromEntries(['uni', 'multi'].map(direction =>
       [direction, selectedVariants(family, direction, state.prefix)])) }));
     const subject = MotionState.subject(state);
-    const mode = state.tense[0].toUpperCase() + state.tense.slice(1) + (subject ? ' · ' + subject : '') + ' · ' + settings.label;
+    const mode = state.tense[0].toUpperCase() + state.tense.slice(1) + (state.tense === 'imperative' ? ' · ' + state.number : subject ? ' · ' + subject : '') + ' · ' + settings.label;
     const descriptions = rows.flatMap(row => ['uni', 'multi'].flatMap(direction => row.cells[direction].map(variant =>
       describeForm(variant, state.tense, state.number === 'plural', state.person, state.gender))));
     const emptyExplanation = descriptions.every(cell => cell.unavailable)
@@ -50,23 +52,26 @@ globalThis.MotionViewModel = (() => {
       function cell(isPlural, person, gender) {
         const selected = selectedVariants(family, direction, state.prefix)[variantIndex];
         const description = describeForm(selected, tense, isPlural, person, gender);
-        const subject = tense === 'past'
+        const subject = tense === 'imperative' ? '' : tense === 'past'
           ? (isPlural ? 'они́' : { masculine: 'он', feminine: 'она́', neuter: 'оно́' }[gender])
           : (isPlural ? { '1': 'мы', '2': 'вы', '3': 'они́' }[person] : { '1': 'я', '2': 'ты', '3': 'он / она́ / оно́' }[person]);
         return { ...description, subject, object: state.showObjects && !description.unavailable ? family.object || '' : '' };
       }
       const rows = tense === 'past'
         ? [['Masculine', false, 'masculine'], ['Feminine', false, 'feminine'], ['Neuter', false, 'neuter'], ['Plural', true, 'masculine']].map(([label, plural, gender]) => ({ label, cells: [cell(plural, '3', gender)] }))
+        : tense === 'imperative'
+        ? [['Singular', false], ['Plural / polite', true]].map(([label, plural]) => ({ label, cells: [cell(plural, '2', 'masculine')] }))
         : ['1', '2', '3'].map((person, index) => ({ label: ['1st person', '2nd person', '3rd person'][index], cells: [cell(false, person, 'masculine'), cell(true, person, 'masculine')] }));
       const singularVariant = selectedVariants(family, direction, state.prefix)[variantIndex];
       const reason = describeForm(singularVariant, tense, false, '3', 'masculine').reason;
       const irregularNote = family.directionalImperfective?.explanation;
       const hasIrregularNote = irregularNote && variant.note?.includes(irregularNote);
       const note = hasIrregularNote ? variant.note.replace(irregularNote, '').trim() : variant.note;
-      const notes = [reason, note, variant.usageInfo, tense === 'past' ? 'Past forms agree in gender / number, not person; я and ты can also take masculine or feminine forms.' : 'Third-person singular gender changes the pronoun, not the verb.'].filter(Boolean);
-      return { infinitive: variant.infinitive || '—', meta: [variant.aspect, tense].filter(Boolean).join(' · '), columns: tense === 'past' ? ['Gender / number', 'Form'] : ['Person', 'Singular', 'Plural'], rows, notes, irregularNote: hasIrregularNote ? irregularNote : null };
+      const notes = [reason, note, variant.usageInfo, tense === 'past' ? 'Past forms agree in gender / number, not person; я and ты can also take masculine, feminine or neuter forms.' : tense === 'imperative' ? 'Second-person commands; the plural form also addresses one person politely.' : 'Third-person singular gender changes the pronoun, not the verb.'].filter(Boolean);
+      return { infinitive: variant.infinitive || '—', meta: [variant.aspect, tense].filter(Boolean).join(' · '), columns: tense === 'imperative' ? ['Number', 'Form'] : tense === 'past' ? ['Gender / number', 'Form'] : ['Person', 'Singular', 'Plural'], rows, notes, irregularNote: hasIrregularNote ? irregularNote : null };
     });
     return { title: family.movement, context: settings.label + ' · ' + tense + (state.tense === 'infinitive' ? ' (shown for infinitive selection)' : ''), sections };
   }
   return Object.freeze({ grid, conjugation, describeForm });
 })();
+

@@ -12,6 +12,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "идти́",
+          "imperativeSg": "иди́",
           "nonpast1sg": "иду́",
           "nonpast1pl": "идём",
           "pastM": "шёл",
@@ -27,6 +28,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "ходи́ть",
+          "imperativeSg": "ходи́",
           "nonpast1sg": "хожу́",
           "nonpast1pl": "хо́дим",
           "pastM": "ходи́л",
@@ -43,6 +45,7 @@ globalThis.MotionData = (() => {
     "prefixedUnidirectional": {
       "forms": {
         "infinitive": "йти́",
+        "imperativeSg": "йди́",
         "nonpast1sg": "йду́",
         "nonpast1pl": "йдём",
         "pastM": "шёл",
@@ -57,6 +60,7 @@ globalThis.MotionData = (() => {
       "explanation": "идти́ uses the bound -йти́ / -йду́ / -шёл paradigm after these prefixes. при- additionally drops й in the nonpast.",
       "overrides": {
         "pri": {
+          "imperativeSg": "ди́",
           "nonpast1sg": "ду́",
           "nonpast1pl": "дём",
           "nonpast2sg": "дёшь",
@@ -69,11 +73,13 @@ globalThis.MotionData = (() => {
   },
   {
     "id": "vehicle",
+    "prefixedImperative": "езжа́й",
     "movement": "Go by vehicle",
     "base": {
       "uni": [
         {
           "infinitive": "е́хать",
+          "imperativeSg": null,
           "nonpast1sg": "е́ду",
           "nonpast1pl": "е́дем",
           "pastM": "е́хал",
@@ -89,6 +95,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "е́здить",
+          "imperativeSg": "е́зди",
           "nonpast1sg": "е́зжу",
           "nonpast1pl": "е́здим",
           "pastM": "е́здил",
@@ -105,6 +112,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "езжа́ть",
+        "imperativeSg": "езжа́й",
         "nonpast1sg": "езжа́ю",
         "nonpast1pl": "езжа́ем",
         "pastM": "езжа́л",
@@ -126,6 +134,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "бежа́ть",
+          "imperativeSg": "беги́",
           "nonpast1sg": "бегу́",
           "nonpast1pl": "бежи́м",
           "pastM": "бежа́л",
@@ -141,6 +150,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "бе́гать",
+          "imperativeSg": "бе́гай",
           "nonpast1sg": "бе́гаю",
           "nonpast1pl": "бе́гаем",
           "pastM": "бе́гал",
@@ -157,6 +167,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "бега́ть",
+        "imperativeSg": "бега́й",
         "nonpast1sg": "бега́ю",
         "nonpast1pl": "бега́ем",
         "pastM": "бега́л",
@@ -178,6 +189,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "лете́ть",
+          "imperativeSg": "лети́",
           "nonpast1sg": "лечу́",
           "nonpast1pl": "лети́м",
           "pastM": "лете́л",
@@ -193,6 +205,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "лета́ть",
+          "imperativeSg": "лета́й",
           "nonpast1sg": "лета́ю",
           "nonpast1pl": "лета́ем",
           "pastM": "лета́л",
@@ -214,6 +227,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "плыть",
+          "imperativeSg": "плыви́",
           "nonpast1sg": "плыву́",
           "nonpast1pl": "плывём",
           "pastM": "плыл",
@@ -229,6 +243,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "пла́вать",
+          "imperativeSg": "пла́вай",
           "nonpast1sg": "пла́ваю",
           "nonpast1pl": "пла́ваем",
           "pastM": "пла́вал",
@@ -245,6 +260,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "плыва́ть",
+        "imperativeSg": "плыва́й",
         "nonpast1sg": "плыва́ю",
         "nonpast1pl": "плыва́ем",
         "pastM": "плыва́л",
@@ -266,6 +282,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "ползти́",
+          "imperativeSg": "ползи́",
           "nonpast1sg": "ползу́",
           "nonpast1pl": "ползём",
           "pastM": "полз",
@@ -281,6 +298,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "по́лзать",
+          "imperativeSg": "по́лзай",
           "nonpast1sg": "по́лзаю",
           "nonpast1pl": "по́лзаем",
           "pastM": "по́лзал",
@@ -297,6 +315,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "полза́ть",
+        "imperativeSg": "полза́й",
         "nonpast1sg": "полза́ю",
         "nonpast1pl": "полза́ем",
         "pastM": "полза́л",
@@ -318,6 +337,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "лезть",
+          "imperativeSg": "лезь",
           "nonpast1sg": "ле́зу",
           "nonpast1pl": "ле́зем",
           "pastM": "лез",
@@ -333,6 +353,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "ла́зить",
+          "imperativeSg": "лазь",
           "nonpast1sg": "ла́жу",
           "nonpast1pl": "ла́зим",
           "pastM": "ла́зил",
@@ -346,6 +367,7 @@ globalThis.MotionData = (() => {
         },
         {
           "infinitive": "ла́зать",
+          "imperativeSg": "ла́зай",
           "nonpast1sg": "ла́заю",
           "nonpast1pl": "ла́заем",
           "pastM": "ла́зал",
@@ -362,6 +384,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "леза́ть",
+        "imperativeSg": "леза́й",
         "nonpast1sg": "леза́ю",
         "nonpast1pl": "леза́ем",
         "pastM": "леза́л",
@@ -383,6 +406,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "брести́",
+          "imperativeSg": "бреди́",
           "nonpast1sg": "бреду́",
           "nonpast1pl": "бредём",
           "pastM": "брёл",
@@ -398,6 +422,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "броди́ть",
+          "imperativeSg": "броди́",
           "nonpast1sg": "брожу́",
           "nonpast1pl": "бро́дим",
           "pastM": "броди́л",
@@ -414,6 +439,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "бреда́ть",
+        "imperativeSg": "бреда́й",
         "nonpast1sg": "бреда́ю",
         "nonpast1pl": "бреда́ем",
         "pastM": "бреда́л",
@@ -436,6 +462,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "нести́",
+          "imperativeSg": "неси́",
           "nonpast1sg": "несу́",
           "nonpast1pl": "несём",
           "pastM": "нёс",
@@ -451,6 +478,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "носи́ть",
+          "imperativeSg": "носи́",
           "nonpast1sg": "ношу́",
           "nonpast1pl": "но́сим",
           "pastM": "носи́л",
@@ -473,6 +501,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "везти́",
+          "imperativeSg": "вези́",
           "nonpast1sg": "везу́",
           "nonpast1pl": "везём",
           "pastM": "вёз",
@@ -488,6 +517,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "вози́ть",
+          "imperativeSg": "вози́",
           "nonpast1sg": "вожу́",
           "nonpast1pl": "во́зим",
           "pastM": "вози́л",
@@ -510,6 +540,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "вести́",
+          "imperativeSg": "веди́",
           "nonpast1sg": "веду́",
           "nonpast1pl": "ведём",
           "pastM": "вёл",
@@ -525,6 +556,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "води́ть",
+          "imperativeSg": "води́",
           "nonpast1sg": "вожу́",
           "nonpast1pl": "во́дим",
           "pastM": "води́л",
@@ -547,6 +579,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "тащи́ть",
+          "imperativeSg": "тащи́",
           "nonpast1sg": "тащу́",
           "nonpast1pl": "та́щим",
           "pastM": "тащи́л",
@@ -562,6 +595,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "таска́ть",
+          "imperativeSg": "таска́й",
           "nonpast1sg": "таска́ю",
           "nonpast1pl": "таска́ем",
           "pastM": "таска́л",
@@ -578,6 +612,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "та́скивать",
+        "imperativeSg": "та́скивай",
         "nonpast1sg": "та́скиваю",
         "nonpast1pl": "та́скиваем",
         "pastM": "та́скивал",
@@ -600,6 +635,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "кати́ть",
+          "imperativeSg": "кати́",
           "nonpast1sg": "качу́",
           "nonpast1pl": "ка́тим",
           "pastM": "кати́л",
@@ -615,6 +651,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "ката́ть",
+          "imperativeSg": "ката́й",
           "nonpast1sg": "ката́ю",
           "nonpast1pl": "ката́ем",
           "pastM": "ката́л",
@@ -631,6 +668,7 @@ globalThis.MotionData = (() => {
     "directionalImperfective": {
       "forms": {
         "infinitive": "ка́тывать",
+        "imperativeSg": "ка́тывай",
         "nonpast1sg": "ка́тываю",
         "nonpast1pl": "ка́тываем",
         "pastM": "ка́тывал",
@@ -653,6 +691,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "гнать",
+          "imperativeSg": "гони́",
           "nonpast1sg": "гоню́",
           "nonpast1pl": "го́ним",
           "pastM": "гнал",
@@ -668,6 +707,7 @@ globalThis.MotionData = (() => {
       "multi": [
         {
           "infinitive": "гоня́ть",
+          "imperativeSg": "гоня́й",
           "nonpast1sg": "гоня́ю",
           "nonpast1pl": "гоня́ем",
           "pastM": "гоня́л",
@@ -738,3 +778,4 @@ globalThis.MotionData = (() => {
 
   return Object.freeze({ motionFamilies, usageNotes, prefixSettings });
 })();
+
