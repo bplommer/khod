@@ -8,7 +8,7 @@ test('grid models cover all finite control combinations without DOM access', () 
     const state = { ...State.initialState(), prefix, tense, number, person, gender };
     const model = Model.grid(state);
     assert.equal(model.rows.length,14);
-    assert.deepEqual(plain(model.visibility), { pronoun: tense !== 'infinitive', number: tense !== 'infinitive', person: ['present','future'].includes(tense), gender: tense === 'past' && number === 'singular' });
+    assert.deepEqual(plain(model.visibility), { pronoun: !['infinitive', 'imperative'].includes(tense), number: tense !== 'infinitive', person: ['present','future'].includes(tense), gender: tense === 'past' && number === 'singular' });
     for (const row of model.rows) for (const direction of ['uni','multi']) for (const variant of row.cells[direction]) {
       const description = Model.describeForm(variant,tense,number==='plural',person,gender);
       assert(description.form === null || typeof description.form === 'string');
@@ -19,9 +19,9 @@ test('all popup models have the requested row and column structure', () => {
   for (const prefix of ['none','pri','u','po']) for (const tense of State.values.tense) for (const f of Data.motionFamilies) for (const direction of ['uni','multi']) {
     const model = Model.conjugation({ ...State.initialState(), prefix, tense },f.id,direction);
     for (const section of model.sections) {
-      assert.equal(section.rows.length,tense==='past'?4:3);
-      assert.equal(section.columns.length,tense==='past'?2:3);
-      for (const row of section.rows) assert.equal(row.cells.length,tense==='past'?1:2);
+      assert.equal(section.rows.length,tense==='past'?4:tense==='imperative'?2:3);
+      assert.equal(section.columns.length,['past','imperative'].includes(tense)?2:3);
+      for (const row of section.rows) assert.equal(row.cells.length,['past','imperative'].includes(tense)?1:2);
     }
   }
 });
@@ -47,3 +47,4 @@ test('UI status keeps available forms and grammatical gaps distinct', () => {
   const present=Model.describeForm(singular,'present',false,'1','masculine');
   assert.equal(present.unavailable,true); assert(present.reason.includes('no present tense'));
 });
+

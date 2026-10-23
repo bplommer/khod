@@ -74,6 +74,20 @@ Pronoun selection changes only agreement features needed by the tense. Past has 
 
 `MotionViewModel.grid(state)` produces control visibility, column metadata and derived variants. `MotionViewModel.conjugation(state, familyId, direction)` produces the popup table. Infinitive uses present in that popup, including dashes for perfectives with no present tense.
 
+Imperative follows Future in the Form selector. Entering it retains the current
+number, forces the shared person to second, and synchronizes the hidden subject
+to ты or вы. Only number remains selectable; gender is retained. Leaving imperative
+keeps those shared selections. Commands omit an explicit subject in both the grid
+and popup. Popups show singular and plural/polite second-person forms only.
+Imperative is also supported by version-1 URLs (`tense=imperative`); inconsistent
+URL person/pronoun values are reconciled against the stored number.
+
+Imperative singulars are explicit paradigm data, with plural formed by adding
+-те. Prefix composition shares the existing stress and stem rules. Е́хать has
+no direct standard imperative; its cell explains the substitute поезжа́й, while
+prefixed commands use -езжа́й (приезжа́й, уезжа́й, поезжа́й). See the Gramota
+references in the page for this exception and ла́зить → лазь / лазьте.
+
 ## Extending the linguistic model
 
 Each movement label and base paradigm is stored once. Prefixing uses them except where a family provides a changed bound stem or an explicit exception. The single по- prefix gives onset and limited-duration meanings; distributive combinations with other prefixes are not included.
@@ -148,7 +162,8 @@ reload. History tests use a deterministic adapter; they do not substitute for
 native browser verification. Check Back/Forward, Escape, backdrop dismissal and
 focus after reloading both source and packaged pages in each target browser.
 
-Verification for this change: all 40 Node tests and standalone packaging passed.
+Verification before imperative support: all 40 Node tests and standalone packaging passed.
 Native browser automation was attempted with a separate headless Chrome profile,
 but Chrome aborted during startup in the execution environment. Native history,
 Escape handling and focus trapping therefore remain unverified in Chrome/Safari.
+

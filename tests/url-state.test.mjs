@@ -108,3 +108,25 @@ test('plain HTTP without randomUUID can own popup entries', () => {
   history.open({family:'walk',direction:'uni'}); history.close();
   assert.equal(codec.read(dom.window.location.href).popup,null);
 });
+
+
+test('imperative URLs normalize person and subject, retain number/gender, and restore popup history',()=>{
+  for(const href of ['https://khod.example/?','file:///tmp/khod.html#']) {
+    const url=href+'v=1&tense=imperative&number=plural&person=3&pronoun=ona&gender=neuter&popup=walk&direction=uni';
+    const decoded=codec.read(url);
+    assert.equal(decoded.state.person,'2');assert.equal(decoded.state.pronoun,'vy');
+    assert.equal(decoded.state.number,'plural');assert.equal(decoded.state.gender,'neuter');
+    const dom=fixture(readFileSync(sourceRoot+'index.html','utf8'),url);
+    const context=loadPure();Object.assign(context,{setTimeout:()=>0,clearTimeout(){}});
+    vm.runInContext(readFileSync(sourceRoot+'presentation.js','utf8'),context);
+    const ui=context.MotionUI.start(dom.document,dom.window);
+    assert(dom.elements['conjugation-dialog'].open);
+    assert(dom.elements['conjugation-content'].text.includes('иди́те'));
+    dom.elements['conjugation-close'].fire('click');
+    assert.equal(dom.window.history.length,1);
+    dom.elements['verb-rows'].children[0].children[1].fire('click');
+    dom.window.history.back();assert(!dom.elements['conjugation-dialog'].open);
+    dom.window.history.forward();assert(dom.elements['conjugation-dialog'].open);
+    assert.equal(ui.getState().tense,'imperative');
+  }
+});

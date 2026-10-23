@@ -135,3 +135,30 @@ test('neuter selection keeps я and ты and renders their past forms',()=>{
     assert(e['verb-rows'].text.includes((pronoun==='ya'?'я':'ты')+' шло'));
   }
 });
+
+
+test('imperative shows only number, omits subjects, and renders two popup forms',()=>{
+  const {elements:e,choose,ui,window}=app();
+  choose('tense-past');choose('pronoun-oni');choose('gender-neuter');
+  const length=window.history.length;
+  choose('tense-imperative');
+  assert.equal(window.history.length,length);
+  assert.equal(ui.getState().person,'2');assert.equal(ui.getState().number,'plural');
+  assert(e['person-2'].checked);assert(e['pronoun-vy'].checked);
+  for(const field of ['pronoun','person','gender']) assert(e[field+'-options'].hidden);
+  assert(!e['number-options'].hidden);
+  assert(e['verb-rows'].children[0].children[1].text.includes('иди́те'));
+  assert(!e['verb-rows'].children[0].children[1].text.includes('вы '));
+  e['verb-rows'].children[0].children[1].fire('click');
+  const table=descendants(e['conjugation-content'],'table')[0];
+  assert.equal(descendants(table,'tbody')[0].children.length,2);
+  assert(table.text.includes('иди́'));assert(table.text.includes('иди́те'));
+  assert(!table.text.includes('1st'));assert(!table.text.includes('3rd'));
+  assert(!descendants(table,'span').some(node=>node.className==='popup-subject'));
+  e['conjugation-close'].fire('click');
+  choose('singular');assert.equal(ui.getState().pronoun,'ty');
+  assert(e['verb-rows'].children[0].children[1].text.includes('иди́'));
+  choose('tense-past');
+  assert(e['verb-rows'].children[0].children[1].text.includes('ты шло'));
+  assert(e['gender-neuter'].checked);
+});

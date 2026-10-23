@@ -9,7 +9,7 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); line-height: 1.15; margin: 10px 0 12
 .control-panel.is-sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 4px 8px -6px #23332f70; }
 .form-controls, .subject-agreement, .controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 18px 32px; }
 .subject-agreement, .controls { width: max-content; max-width: 100%; min-width: 0; }
-.subject-agreement:has(#pronoun-options[hidden]) { display: none; }
+.subject-agreement:has(#pronoun-options[hidden]):has(#number-options[hidden]) { display: none; }
 .controls { gap: 18px 28px; }
 /* Both agreement variants size the same slot, even when one is unavailable. */
 .agreement-options { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 100%; }
@@ -106,3 +106,4 @@ a { color: var(--green); text-underline-offset: 3px; }
 
 .object-toggle { font-size: .85rem; font-weight: 400; color: var(--muted); margin-top: 8px; }
 .popup-table .popup-object { display: inline; margin-bottom: 0; }
+
