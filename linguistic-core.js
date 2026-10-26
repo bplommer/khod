@@ -36,7 +36,7 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
         }
         const forms = prefix.kind === 'unprefixed'
           ? { ...paradigm }
-          : Object.fromEntries(Object.entries(paradigm).map(([field, form]) => [field, form === null ? null : attachPrefix(prefix.surface, form)]));
+          : Object.fromEntries(Object.entries(paradigm).map(([field, form]) => [field, form === null ? null : Array.isArray(form) ? form.map(item => attachPrefix(prefix.surface, item)) : attachPrefix(prefix.surface, form)]));
         return { ...forms, aspect: prefix.aspects[direction], status: 'valid', ...(note && index === 0 ? { note } : {}) };
       });
     }
@@ -53,8 +53,11 @@ const { motionFamilies, usageNotes, prefixSettings } = MotionData;
     function formFor(variant, tense, isPlural, person, gender) {
       if (['ungrammatical', 'not-modelled'].includes(variant.status) || (tense === 'present' && variant.aspect === 'perfective')) return null;
       if (tense === 'infinitive') return variant.infinitive;
-      if (tense === 'imperative') return person !== '2' || variant.imperativeSg === null
-        ? null : isPlural ? attachPrefix('', variant.imperativeSg) + 'те' : variant.imperativeSg;
+      if (tense === 'imperative') {
+        if (person !== '2' || variant.imperativeSg === null) return null;
+        const alternatives = Array.isArray(variant.imperativeSg) ? variant.imperativeSg : [variant.imperativeSg];
+        return alternatives.map(form => isPlural ? attachPrefix('', form) + 'те' : form).join(' / ');
+      }
       if (tense === 'past') return variant[isPlural ? 'pastPl' : { masculine: 'pastM', feminine: 'pastF', neuter: 'pastN' }[gender]];
       const agreement = person + (isPlural ? 'pl' : 'sg');
       return tense === 'future' && variant.aspect === 'imperfective'
