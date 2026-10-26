@@ -83,10 +83,16 @@ Imperative is also supported by version-1 URLs (`tense=imperative`); inconsisten
 URL person/pronoun values are reconciled against the stored number.
 
 Imperative singulars are explicit paradigm data, with plural formed by adding
--те. Prefix composition shares the existing stress and stem rules. Е́хать has
-no direct standard imperative; its cell explains the substitute поезжа́й, while
-prefixed commands use -езжа́й (приезжа́й, уезжа́й, поезжа́й). See the Gramota
-references in the page for this exception and ла́зить → лазь / лазьте.
+-те. Prefix composition shares the existing stress and stem rules. Unprefixed
+е́хать shows езжа́й / езжа́йте with an imperative-only note on differing dictionary
+recommendations; colloquial usage is not treated as a grammatical gap. Prefixed
+commands remain приезжа́й, уезжа́й and поезжа́й. Golberg and Ivanov (2025,
+[p. 138](https://ruslang.ru/sites/default/files/2025-02/Proceedings_2025_1.pdf#page=138))
+compare the conflicting dictionary treatments, including acceptance without a
+restrictive label in the 2023 Большой орфоэпический словарь. Severskaya (2024,
+[p. 337](https://trudy.ruslang.ru/sites/default/files/articles/2024/3/2024-3_334-348.pdf#page=4))
+documents езжа́й in corpus usage. The page links these sources alongside the
+Gramota reference for ла́зить → лазь / ла́зьте.
 
 ## Extending the linguistic model
 

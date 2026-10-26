@@ -162,3 +162,24 @@ test('imperative shows only number, omits subjects, and renders two popup forms'
   assert(e['verb-rows'].children[0].children[1].text.includes('ты шло'));
   assert(e['gender-neuter'].checked);
 });
+
+test('ехать renders both imperative forms and usage guidance without a dash or strikethrough',()=>{
+  const {elements:e,choose}=app();
+  choose('tense-imperative');
+  for(const [number,expected] of [['singular','езжа́й'],['plural','езжа́йте']]) {
+    choose(number);
+    const cell=e['verb-rows'].children[1].children[1];
+    assert.equal(descendants(cell,'span').find(node=>node.className==='verb-form').text,expected);
+    assert.equal(descendants(cell,'s').length,0);
+    assert(cell.text.includes('conservative guides recommend'));
+    cell.fire('click');
+    const popup=e['conjugation-content'];
+    assert(popup.text.includes('езжа́й'));assert(popup.text.includes('езжа́йте'));
+    assert(popup.text.includes('accepted by several modern dictionaries'));
+    assert(!popup.text.includes('no direct standard imperative'));
+    assert.equal(descendants(popup,'s').length,0);
+    e['conjugation-close'].fire('click');
+  }
+  choose('prefix-pri');
+  assert(!e['verb-rows'].children[1].text.includes('conservative guides'));
+});

@@ -79,7 +79,7 @@ globalThis.MotionData = (() => {
       "uni": [
         {
           "infinitive": "е́хать",
-          "imperativeSg": null,
+          "imperativeSg": "езжа́й",
           "nonpast1sg": "е́ду",
           "nonpast1pl": "е́дем",
           "pastM": "е́хал",
