@@ -10,8 +10,10 @@ globalThis.MotionViewModel = (() => {
     const reason = !['not-modelled', 'ungrammatical'].includes(variant.status) && tense === 'present' && variant.aspect === 'perfective'
       ? 'Perfective verbs have no present tense. Select Future for the simple future form.'
       : tense === 'imperative' && variant.infinitive === 'е́хать'
-        ? 'Common in speech and accepted by several modern dictionaries; conservative guides recommend поезжа́й / поезжа́йте (shown under по-).'
-        : variant.explanation;
+        ? 'Поезжа́й / поезжа́йте serves as the imperative of both е́хать and пое́хать. Езжа́й / езжа́йте is common in speech and accepted by several modern dictionaries; conservative guides prefer поезжа́й / поезжа́йте.'
+        : tense === 'imperative' && variant.infinitive === 'пое́хать'
+          ? 'Поезжа́й / поезжа́йте is also an imperative form of е́хать (imperfective); this form is shared by both verbs.'
+          : variant.explanation;
     return { form, unavailable: form === null, inappropriate, reason };
   }
   function grid(state) {

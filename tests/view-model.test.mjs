@@ -54,14 +54,14 @@ test('ехать imperative is available with a usage note scoped to the unprefi
   const variant = Core.selectedVariants(vehicle,'uni','none')[0];
   for (const plural of [false,true]) {
     const description = Model.describeForm(variant,'imperative',plural,'2','masculine');
-    assert.equal(description.form,plural ? 'езжа́йте' : 'езжа́й');
+    assert.equal(description.form,plural ? 'поезжа́йте / езжа́йте' : 'поезжа́й / езжа́й');
     assert.equal(description.unavailable,false);
     assert.equal(description.inappropriate,false);
     assert.match(description.reason,/accepted by several modern dictionaries/);
-    assert.match(description.reason,/conservative guides recommend поезжа́й/);
+    assert.match(description.reason,/conservative guides prefer поезжа́й/);
   }
   const popup = Model.conjugation({...State.initialState(),tense:'imperative'},'vehicle','uni');
-  assert.deepEqual(plain(popup.sections[0].rows.map(row=>row.cells[0].form)),['езжа́й','езжа́йте']);
+  assert.deepEqual(plain(popup.sections[0].rows.map(row=>row.cells[0].form)),['поезжа́й / езжа́й','поезжа́йте / езжа́йте']);
   assert(popup.sections[0].notes.some(note=>note.includes('conservative guides')));
   for (const tense of ['infinitive','past','present','future']) {
     assert.equal(Model.describeForm(variant,tense,false,'2','masculine').reason,undefined);
@@ -72,4 +72,21 @@ test('ехать imperative is available with a usage note scoped to the unprefi
     assert(!prefixed.sections[0].notes.some(note=>note.includes('conservative guides')));
   }
   assert.equal(Model.describeForm(Core.selectedVariants(vehicle,'multi','none')[0],'imperative',false,'2','masculine').reason,undefined);
+});
+
+test('both vehicle paradigms explain the shared imperative only in imperative mode', () => {
+  for (const prefix of ['none','po']) {
+    const state={...State.initialState(),prefix,tense:'imperative',person:'2'};
+    const variant=Model.grid(state).rows.find(row=>row.family.id==='vehicle').cells.uni[0];
+    const description=Model.describeForm(variant,'imperative',false,'2','masculine');
+    assert(description.reason.includes(prefix==='none' ? 'both е́хать and пое́хать' : 'also an imperative form of е́хать'));
+    assert.equal(variant.aspect,prefix==='none' ? 'imperfective' : 'perfective');
+    const section=Model.conjugation(state,'vehicle','uni').sections[0];
+    assert(section.notes.includes(description.reason));
+    assert.deepEqual(plain(section.rows.map(row=>row.cells[0].form)),prefix==='none'
+      ? ['поезжа́й / езжа́й','поезжа́йте / езжа́йте'] : ['поезжа́й','поезжа́йте']);
+    for (const tense of ['infinitive','past','present','future']) {
+      assert(!Model.conjugation({...state,tense},'vehicle','uni').sections[0].notes.some(note=>note.includes('both verbs')||note.includes('both е́хать')));
+    }
+  }
 });

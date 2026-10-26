@@ -54,7 +54,7 @@ test('every generated paradigm is complete and stress marks combine with vowels'
 test('imperative irregulars, stress shifts, bound stems and plural stress', () => {
   // Independent expected forms; do not derive these from the implementation.
   const expected = {
-    walk: ['иди́','ходи́'], vehicle: ['езжа́й','е́зди'], run: ['беги́','бе́гай'],
+    walk: ['иди́','ходи́'], vehicle: ['поезжа́й / езжа́й','е́зди'], run: ['беги́','бе́гай'],
     fly: ['лети́','лета́й'], swim: ['плыви́','пла́вай'], crawl: ['ползи́','по́лзай'],
     climb: ['лезь','лазь'], trudge: ['бреди́','броди́'], carry: ['неси́','носи́'],
     transport: ['вези́','вози́'], lead: ['веди́','води́'], drag: ['тащи́','таска́й'],
@@ -66,7 +66,7 @@ test('imperative irregulars, stress shifts, bound stems and plural stress', () =
     }
   }
   for (const [id,direction,prefix,singular,plural] of [
-    ['vehicle','uni','none','езжа́й','езжа́йте'],
+    ['vehicle','uni','none','поезжа́й / езжа́й','поезжа́йте / езжа́йте'],
     ['walk','uni','pri','приди́','приди́те'], ['walk','uni','u','уйди́','уйди́те'],
     ['walk','uni','po','пойди́','пойди́те'], ['vehicle','uni','pri','приезжа́й','приезжа́йте'],
     ['vehicle','uni','u','уезжа́й','уезжа́йте'], ['vehicle','uni','po','поезжа́й','поезжа́йте'],

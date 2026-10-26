@@ -82,16 +82,19 @@ and popup. Popups show singular and plural/polite second-person forms only.
 Imperative is also supported by version-1 URLs (`tense=imperative`); inconsistent
 URL person/pronoun values are reconciled against the stored number.
 
-Imperative singulars are explicit paradigm data, with plural formed by adding
--те. Prefix composition shares the existing stress and stem rules. Unprefixed
-е́хать shows езжа́й / езжа́йте with an imperative-only note on differing dictionary
-recommendations; colloquial usage is not treated as a grammatical gap. Prefixed
+Imperative singulars are explicit paradigm data (a string or an ordered array of
+alternatives), with plural formed by adding -те to each alternative. Prefix composition shares the existing stress and stem rules. Unprefixed
+е́хать shows поезжа́й / езжа́й (plural поезжа́йте / езжа́йте). Imperative-only
+notes under both е́хать and пое́хать explain that поезжа́й / поезжа́йте serves both
+verbs. The е́хать note also retains the differing dictionary recommendations for
+езжа́й / езжа́йте; colloquial usage is not treated as a grammatical gap. Prefixed
 commands remain приезжа́й, уезжа́й and поезжа́й. Golberg and Ivanov (2025,
 [p. 138](https://ruslang.ru/sites/default/files/2025-02/Proceedings_2025_1.pdf#page=138))
 compare the conflicting dictionary treatments, including acceptance without a
 restrictive label in the 2023 Большой орфоэпический словарь. Severskaya (2024,
 [p. 337](https://trudy.ruslang.ru/sites/default/files/articles/2024/3/2024-3_334-348.pdf#page=4))
-documents езжа́й in corpus usage. The page links these sources alongside the
+documents езжа́й in corpus usage; [p. 335](https://trudy.ruslang.ru/sites/default/files/articles/2024/3/2024-3_334-348.pdf#page=2)
+quotes Es’kova on поезжа́й serving both е́хать and пое́хать. The page links these sources alongside the
 Gramota reference for ла́зить → лазь / ла́зьте.
 
 ## Extending the linguistic model

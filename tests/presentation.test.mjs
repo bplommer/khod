@@ -166,12 +166,12 @@ test('imperative shows only number, omits subjects, and renders two popup forms'
 test('ехать renders both imperative forms and usage guidance without a dash or strikethrough',()=>{
   const {elements:e,choose}=app();
   choose('tense-imperative');
-  for(const [number,expected] of [['singular','езжа́й'],['plural','езжа́йте']]) {
+  for(const [number,expected] of [['singular','поезжа́й / езжа́й'],['plural','поезжа́йте / езжа́йте']]) {
     choose(number);
     const cell=e['verb-rows'].children[1].children[1];
     assert.equal(descendants(cell,'span').find(node=>node.className==='verb-form').text,expected);
     assert.equal(descendants(cell,'s').length,0);
-    assert(cell.text.includes('conservative guides recommend'));
+    assert(cell.text.includes('conservative guides prefer'));
     cell.fire('click');
     const popup=e['conjugation-content'];
     assert(popup.text.includes('езжа́й'));assert(popup.text.includes('езжа́йте'));
@@ -182,4 +182,20 @@ test('ехать renders both imperative forms and usage guidance without a dash
   }
   choose('prefix-pri');
   assert(!e['verb-rows'].children[1].text.includes('conservative guides'));
+});
+
+test('поехать imperative shows the reciprocal ехать note in grid and popup',()=>{
+  const {elements:e,choose}=app();
+  choose('tense-imperative');choose('prefix-po');
+  for (const [number,expected] of [['singular','поезжа́й'],['plural','поезжа́йте']]) {
+    choose(number);
+    const cell=e['verb-rows'].children[1].children[1];
+    assert.equal(descendants(cell,'span').find(node=>node.className==='verb-form').text,expected);
+    assert(cell.text.includes('also an imperative form of е́хать (imperfective)'));
+    cell.fire('click');
+    assert(e['conjugation-content'].text.includes('also an imperative form of е́хать (imperfective)'));
+    e['conjugation-close'].fire('click');
+  }
+  choose('tense-future');
+  assert(!e['verb-rows'].children[1].children[1].text.includes('also an imperative'));
 });
