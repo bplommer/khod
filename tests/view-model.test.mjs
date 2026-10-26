@@ -48,3 +48,28 @@ test('UI status keeps available forms and grammatical gaps distinct', () => {
   assert.equal(present.unavailable,true); assert(present.reason.includes('no present tense'));
 });
 
+
+test('ехать imperative is available with a usage note scoped to the unprefixed imperative', () => {
+  const vehicle = Data.motionFamilies.find(f => f.id === 'vehicle');
+  const variant = Core.selectedVariants(vehicle,'uni','none')[0];
+  for (const plural of [false,true]) {
+    const description = Model.describeForm(variant,'imperative',plural,'2','masculine');
+    assert.equal(description.form,plural ? 'езжа́йте' : 'езжа́й');
+    assert.equal(description.unavailable,false);
+    assert.equal(description.inappropriate,false);
+    assert.match(description.reason,/accepted by several modern dictionaries/);
+    assert.match(description.reason,/conservative guides recommend поезжа́й/);
+  }
+  const popup = Model.conjugation({...State.initialState(),tense:'imperative'},'vehicle','uni');
+  assert.deepEqual(plain(popup.sections[0].rows.map(row=>row.cells[0].form)),['езжа́й','езжа́йте']);
+  assert(popup.sections[0].notes.some(note=>note.includes('conservative guides')));
+  for (const tense of ['infinitive','past','present','future']) {
+    assert.equal(Model.describeForm(variant,tense,false,'2','masculine').reason,undefined);
+    assert(!Model.conjugation({...State.initialState(),tense},'vehicle','uni').sections[0].notes.some(note=>note.includes('conservative guides')));
+  }
+  for (const prefix of ['pri','u','po']) {
+    const prefixed = Model.conjugation({...State.initialState(),tense:'imperative',prefix},'vehicle','uni');
+    assert(!prefixed.sections[0].notes.some(note=>note.includes('conservative guides')));
+  }
+  assert.equal(Model.describeForm(Core.selectedVariants(vehicle,'multi','none')[0],'imperative',false,'2','masculine').reason,undefined);
+});

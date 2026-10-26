@@ -9,8 +9,8 @@ globalThis.MotionViewModel = (() => {
     const inappropriate = ['semantic', 'unidiomatic'].includes(variant.status);
     const reason = !['not-modelled', 'ungrammatical'].includes(variant.status) && tense === 'present' && variant.aspect === 'perfective'
       ? 'Perfective verbs have no present tense. Select Future for the simple future form.'
-      : tense === 'imperative' && variant.imperativeSg === null
-        ? 'Е́хать has no direct standard imperative. Use поезжа́й / поезжа́йте (shown under по-).'
+      : tense === 'imperative' && variant.infinitive === 'е́хать'
+        ? 'Common in speech and accepted by several modern dictionaries; conservative guides recommend поезжа́й / поезжа́йте (shown under по-).'
         : variant.explanation;
     return { form, unavailable: form === null, inappropriate, reason };
   }
